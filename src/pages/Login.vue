@@ -6,7 +6,7 @@
       </div>
       <div class="title-intro">
         <h1>Bem-vindo(a) ao TallosFlix</h1>
-        <p>Aproveite o melhor de filmes e series exclusivos na plataforma TallosFlix. Tenha o melhor do cinema mundial nas suas mãos!</p>
+        <p>Aproveite o melhor de filmes e series exclusivos na plataforma TallosFlix. Tenha o melhor de críticas e comentários do cinema mundial nas suas mãos!</p>
       </div>
       <div>
         <button 
