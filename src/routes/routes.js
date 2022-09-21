@@ -1,3 +1,5 @@
+import { createWebHistory } from 'vue-router'
+
 // GeneralViews
 import Login from '../pages/Login.vue'
 import NotFound from '../pages/NotFoundPage.vue'
@@ -14,8 +16,15 @@ import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
 
 const routes = [
+  /*{
+    path: '/',
+    name: 'home',
+    component: DashboardLayout,
+    //redirect: '/admin/overview'
+  },*/
   {
     path: '/',
+    name: 'login',
     component: Login,
     //redirect: '/admin/overview'
   },
@@ -66,7 +75,7 @@ const routes = [
       }
     ]
   },
-  { path: '*', component: NotFound }
+  { path: '*', component: NotFound },
 ]
 
 /**
