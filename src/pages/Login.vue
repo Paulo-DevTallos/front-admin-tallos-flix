@@ -38,22 +38,50 @@
             <h2>Ambiente de Admin</h2>
           </div>
           <label for="email">E-mail</label>
-          <input type="text" id="email" placeholder="meuemail@example.com">
+          <!--<input type="text" id="email" placeholder="meuemail@example.com">-->
+          <base-input 
+            id="email"
+            type="text"
+            placeholder="meuemail@example.com"
+            v-model="user.email"
+            :addonLeftIcon="'nc-icon nc-email-83'"
+          />
           <label for="password">Senha</label>
-          <input type="text" id="password" placeholder="digite sua senha">
-          <button>Entrar</button>
+          <!--<input type="text" id="password" placeholder="digite sua senha">-->
+          <base-input 
+            id="password"
+            type="password"
+            placeholder="senha"
+            v-model="user.password"
+            :addonLeftIcon="'nc-icon nc-lock-circle-open'"
+          />
+          <button type="submit">Entrar</button>
         </form>
       </div>
       <div class="form-user" v-if="hiddenUser">
-        <form>
+        <form @submit.prevent="testeForm">
           <div>
             <h2>Ambiente de Usuário</h2>
           </div>
           <label for="email">E-mail</label>
-          <input type="text" id="email" placeholder="meuemail@example.com">
+          <!--<input type="text" id="email" placeholder="meuemail@example.com">-->
+          <base-input 
+            id="email"
+            type="text"
+            placeholder="meuemail@example.com"
+            v-model="user.email"
+            :addonLeftIcon="'nc-icon nc-email-83'"
+          />
           <label for="password">Senha</label>
-          <input type="text" id="password" placeholder="digite sua senha">
-          <button>Entrar</button>
+          <!--<input type="text" id="password" placeholder="digite sua senha">-->
+          <base-input 
+            id="password"
+            type="password"
+            placeholder="senha"
+            v-model="user.password"
+            :addonLeftIcon="'nc-icon nc-lock-circle-open'"
+          />
+          <button type="submit">Entrar</button>
         </form>
       </div>
     </div>
@@ -61,39 +89,42 @@
 </template>
 
 <script>
+import BaseInput from '../components/Inputs/BaseInput.vue'
 export default {
-  name: 'Login',
+  name: "Login",
+  components: { BaseInput },
   data() {
     return {
       displayNone: false,
       showBtn: true,
       hiddenAdmin: false,
       hiddenUser: false,
-    }
+      user: {
+        email: null,
+        password: null,
+      }
+    };
   },
   methods: {
+    testeForm() {
+      alert(`${this.user.email}, ${this.user.password}`)
+    },
     showLoginDisplay() {
-      this.displayNone = true
-      this.showBtn = false
+      this.displayNone = true;
+      this.showBtn = false;
     },
-
     toggleAdmin() {
-      if (this.hiddenUser === true) {
-        this.hiddenUser = false
-      }
-      this.hiddenAdmin = !this.hiddenAdmin
+      if (this.hiddenUser === true) this.hiddenUser = false;
+      this.hiddenAdmin = !this.hiddenAdmin;
     },
-
     toggleUser() {
-      if (this.hiddenAdmin === true) {
-        this.hiddenAdmin = false
-      }
-      this.hiddenUser = !this.hiddenUser
+      if (this.hiddenAdmin === true) this.hiddenAdmin = false;
+      this.hiddenUser = !this.hiddenUser;
     }
   },
   mounted() {
-    this.hiddenAdmin = false
-  }
+  },
+  components: { BaseInput }
 }  
 </script>
 
@@ -176,9 +207,9 @@ export default {
 }
 
 .form-user {
-  background-color: #fff;
+  background-color: #c9d2ff;
   color: #121212;
-  padding: 50px 80px;
+  padding: 50px 60px;
   border-radius: 15px;
   width: 400px;
   position: fixed;
