@@ -1,9 +1,12 @@
 <template>
-  <div class="sidebar"
-       :style="sidebarStyle"
-       :data-color="backgroundColor"
-       :data-image="backgroundImage">
+  <div 
+    class="sidebar"
+    :style="sidebarStyle"
+    :data-color="backgroundColor"
+    :data-image="backgroundImage"
+  >
     <div class="sidebar-wrapper">
+      <!-- logo sidebar -->
       <div class="logo">
         <a href="#" class="simple-text logo__container">
           <div class="logo-img">
@@ -12,6 +15,7 @@
         </a>
       </div>
 
+      
       <slot name="content"></slot>
       <ul class="nav nav-main__links">
         <!--By default vue-router adds an active class to each route link. This way the links are colored when clicked-->
@@ -28,9 +32,6 @@
           </sidebar-link>
         </slot>
       </ul>
-      <!--<ul class="nav nav-bottom" v-if="$slots['bottom-links']">
-        <slot name="bottom-links"></slot>
-      </ul>-->
     </div>
   </div>
 </template>
