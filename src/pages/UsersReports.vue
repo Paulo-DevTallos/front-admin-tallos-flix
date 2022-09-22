@@ -5,8 +5,20 @@
 </template>
 
 <script>
+//import Service from '../services/axios-requests'
+
 export default {
-  name: 'UsersReports'
+  name: 'UsersReports',
+  methods: {
+    //list users
+    /*async listUser() {
+      await Service.listar().then(res => console.log(res.data))
+    }*/
+  },
+
+  mounted() {
+    this.listUser()
+  }
 }
 </script>
 
