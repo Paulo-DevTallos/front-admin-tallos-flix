@@ -1,77 +1,124 @@
 <template>
   <div class="wrapper">
     <side-bar>
+      <!-- menu mobile -->
       <mobile-menu slot="content"></mobile-menu>
-      <sidebar-link to="/admin/overview">
-        <i class="nc-icon nc-chart-pie-35"></i>
-        <p>Dashboard</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/user">
-        <i class="nc-icon nc-circle-09"></i>
-        <p>User Profile</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/table-list">
-        <i class="nc-icon nc-notes"></i>
-        <p>Table list</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/typography">
-        <i class="nc-icon nc-paper-2"></i>
-        <p>Typography</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/icons">
-        <i class="nc-icon nc-atom"></i>
-        <p>Icons</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/maps">
-        <i class="nc-icon nc-pin-3"></i>
-        <p>Maps</p>
-      </sidebar-link>
-      <sidebar-link to="/admin/notifications">
-        <i class="nc-icon nc-bell-55"></i>
-        <p>Notifications</p>
-      </sidebar-link>
 
-      <template slot="bottom-links">
-        <sidebar-link class="active"
-                      to="/admin/upgrade">
-          <i class="nc-icon nc-alien-33"></i>
-          <p>Upgrade to PRO</p>
-        </sidebar-link>
-      </template>
+      <!-- sidebar structure -->
+      <ul class="menu-sidebar-links">
+        <li>
+          <sidebar-link to="/admin/overview">
+            <i class="nc-icon nc-chart-pie-35"></i>
+            <p>Dashboard</p>
+          </sidebar-link>
+        </li>
+        <li>
+          <sidebar-link to="/admin/user">
+            <i class="nc-icon nc-circle-09"></i>
+            <p>Perfil</p>    
+          </sidebar-link>
+        </li>
+        <li>
+          <sidebar-link to="/admin/users">
+            <i class="nc-icon nc-single-02"></i>
+            <p>Listar usuários</p>
+          </sidebar-link>
+        </li>
+        <li>
+          <sidebar-link to="/admin/maps">
+            <i class="nc-icon nc-pin-3"></i>
+            <p>Encontre um cinema</p>
+          </sidebar-link>
+        </li>
+        <li>
+          <sidebar-link to="#">
+            <i class="nc-icon nc-notes"></i>
+            <p>Relatórios</p>
+          </sidebar-link>
+          <ul class="submenu">
+            <li>
+              <sidebar-link to="/admin/movies">
+                <i class="nc-icon nc-tv-2"></i>
+                <p>Filmes</p>
+              </sidebar-link>
+            </li>
+            <li>
+              <sidebar-link to="/admin/comments">
+                <i class="nc-icon nc-quote"></i>
+                <p>Comentários</p>
+              </sidebar-link>
+            </li>
+            <li>
+              <sidebar-link to="/admin/logs">
+                <i class="nc-icon nc-check-2"></i>
+                <p>Usuarios online</p>
+              </sidebar-link>
+            </li>
+          </ul>
+        </li>  
+      </ul>
     </side-bar>
+
+    <!-- main dashboard painel -->
     <div class="main-panel">
-      <top-navbar></top-navbar>
+      <top-navbar>
+      </top-navbar>
 
       <dashboard-content @click="toggleSidebar">
-
       </dashboard-content>
 
-      <content-footer></content-footer>
+      <content-footer>
+      </content-footer>
     </div>
   </div>
 </template>
-<style lang="scss">
-
-</style>
 <script>
-  import TopNavbar from './TopNavbar.vue'
-  import ContentFooter from './ContentFooter.vue'
-  import DashboardContent from './Content.vue'
-  import MobileMenu from './MobileMenu.vue'
-  export default {
-    components: {
-      TopNavbar,
-      ContentFooter,
-      DashboardContent,
-      MobileMenu
-    },
-    methods: {
-      toggleSidebar () {
-        if (this.$sidebar.showSidebar) {
-          this.$sidebar.displaySidebar(false)
-        }
+import TopNavbar from './TopNavbar.vue'
+import ContentFooter from './ContentFooter.vue'
+import DashboardContent from './Content.vue'
+import MobileMenu from './MobileMenu.vue'
+import SidebarLink from '../components/SidebarPlugin/SidebarLink.vue'
+
+export default {
+  components: {
+  TopNavbar,
+  ContentFooter,
+  DashboardContent,
+  MobileMenu,
+  SidebarLink
+},
+  methods: {
+    toggleSidebar () {
+      if (this.$sidebar.showSidebar) {
+        this.$sidebar.displaySidebar(false)
       }
     }
   }
-
+}
 </script>
+
+<style lang="scss">
+ul {
+  list-style: none;
+}
+.menu-sidebar-links {
+  list-style: none;
+  padding: 0;
+}
+
+.submenu {
+  display: none;
+  min-width: 100%;
+}
+
+.menu-sidebar-links > li:hover > .submenu,
+.submenu > li:hover > .submenu {
+  display: block;
+}
+
+.submenu > li:hover, a:hover {
+  transition: .5s ease-in-out;
+  background: #009acc;
+  border-radius: 5px;
+}
+</style>
