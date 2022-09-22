@@ -107,6 +107,7 @@
         border-radius: 4px;
         display: block;
         padding: 10px 15px;
+        transition: .4s ease-in-out;
 
         &:hover{
           background: rgba(255, 255, 255, 0.13);
