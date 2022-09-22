@@ -11,15 +11,12 @@ import Typography from 'src/pages/Typography.vue'
 import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
-import CommentsView from 'src/pages/CommentsView.vue'
+import CommentsView from '../pages/CommentsView.vue'
+import UserReports from '../pages/UserReports'
+import MoviesReports from '../pages/MoviesReports'
+import LogsReports from '../pages/LogsReports'
 
 const routes = [
-  /*{
-    path: '/',
-    name: 'home',
-    component: DashboardLayout,
-    //redirect: '/admin/overview'
-  },*/
   {
     path: '/login',
     name: 'login',
@@ -43,6 +40,32 @@ const routes = [
         component: UserProfile
       },
       {
+        path: 'users',
+        name: 'UserReports',
+        component: UserReports
+      },
+      {
+        path: 'maps',
+        name: 'Maps',
+        component: Maps
+      },
+      {
+        path: 'movies',
+        name: 'MoviesReports',
+        component: MoviesReports
+      },
+      {
+        path: 'comments',
+        name: 'Comments',
+        component: CommentsView
+      },
+      {
+        path: 'logs',
+        name: 'LogsReports',
+        component: LogsReports
+      },
+      //rotas obsoletas
+      {
         path: 'table-list',
         name: 'Table List',
         component: TableList
@@ -58,20 +81,10 @@ const routes = [
         component: Icons
       },
       {
-        path: 'maps',
-        name: 'Maps',
-        component: Maps
-      },
-      {
         path: 'notifications',
         name: 'Notifications',
         component: Notifications
       },
-      {
-        path: 'comments',
-        name: 'Comments',
-        component: CommentsView
-      }
     ]
   },
   { path: '*', component: NotFound },
