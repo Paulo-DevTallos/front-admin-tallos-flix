@@ -12,7 +12,7 @@ import Icons from 'src/pages/Icons.vue'
 import Maps from 'src/pages/Maps.vue'
 import Notifications from 'src/pages/Notifications.vue'
 import CommentsView from '../pages/CommentsView.vue'
-import UserReports from '../pages/UserReports'
+import UsersReports from '../pages/UsersReports'
 import MoviesReports from '../pages/MoviesReports'
 import LogsReports from '../pages/LogsReports'
 
@@ -41,8 +41,8 @@ const routes = [
       },
       {
         path: 'users',
-        name: 'UserReports',
-        component: UserReports
+        name: 'UsersReports',
+        component: UsersReports
       },
       {
         path: 'maps',
