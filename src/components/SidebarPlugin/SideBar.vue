@@ -9,7 +9,6 @@
           <div class="logo-img">
               <img src="img/TallosFlix.png" alt="Logo Tallosflix">
           </div>
-          <!--{{title}}-->
         </a>
       </div>
 
@@ -98,8 +97,5 @@
   }
  .sidebar .nav-main__links {
    flex: 1;
- }
- .sidebar .sidebar-wrapper .logo .logo__container {
-   padding-left: 10px;
  }
 </style>
