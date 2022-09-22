@@ -1,8 +1,9 @@
-import DashboardLayout from '../layout/DashboardLayout.vue'
 // GeneralViews
+import Login from '../pages/Login.vue'
 import NotFound from '../pages/NotFoundPage.vue'
 
 // Admin pages
+import DashboardLayout from '../layout/DashboardLayout.vue'
 import Overview from 'src/pages/Overview.vue'
 import UserProfile from 'src/pages/UserProfile.vue'
 import TableList from 'src/pages/TableList.vue'
@@ -13,15 +14,23 @@ import Notifications from 'src/pages/Notifications.vue'
 import Upgrade from 'src/pages/Upgrade.vue'
 
 const routes = [
-  {
+  /*{
     path: '/',
+    name: 'home',
     component: DashboardLayout,
-    redirect: '/admin/overview'
+    //redirect: '/admin/overview'
+  },*/
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    //redirect: '/admin/overview'
   },
   {
     path: '/admin',
+    name: 'admin',
     component: DashboardLayout,
-    redirect: '/admin/overview',
+    //redirect: '/admin/overview',
     children: [
       {
         path: 'overview',
@@ -65,7 +74,7 @@ const routes = [
       }
     ]
   },
-  { path: '*', component: NotFound }
+  { path: '*', component: NotFound },
 ]
 
 /**
