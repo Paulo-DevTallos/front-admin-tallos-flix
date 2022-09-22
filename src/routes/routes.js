@@ -1,5 +1,3 @@
-import { createWebHistory } from 'vue-router'
-
 // GeneralViews
 import Login from '../pages/Login.vue'
 import NotFound from '../pages/NotFoundPage.vue'
@@ -23,15 +21,16 @@ const routes = [
     //redirect: '/admin/overview'
   },*/
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: Login,
     //redirect: '/admin/overview'
   },
   {
     path: '/admin',
+    name: 'admin',
     component: DashboardLayout,
-    redirect: '/admin/overview',
+    //redirect: '/admin/overview',
     children: [
       {
         path: 'overview',
