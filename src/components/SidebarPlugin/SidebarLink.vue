@@ -1,8 +1,10 @@
 <template>
-  <component :is="tag"
-             @click.native="hideSidebar"
-             v-bind="$attrs"
-             tag="li">
+  <component 
+    :is="tag"
+    @click.native="hideSidebar"
+    v-bind="$attrs"
+    tag="li"
+  >
     <a class="nav-link" v-bind="$attrs">
       <slot>
         <i v-if="link.icon" :class="link.icon"></i>
