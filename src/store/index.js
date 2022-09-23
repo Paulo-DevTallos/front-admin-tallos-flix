@@ -7,14 +7,14 @@ Vue.use(vuex)
 export default new vuex.Store({
   state:{
     user: {
-      name: null,
-      email: null,
-      password: null,
+      name: '',
+      email: '',
+      password: '',
     },
-    access_token: null,
+    access_token: '',
   },
   mutations: {
-    'authLogin'(state, payload) {
+    authLogin(state, payload) {
       state.access_token = payload.access_token
       state.user = payload.user
     }
