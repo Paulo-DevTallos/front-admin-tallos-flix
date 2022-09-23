@@ -97,10 +97,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 ul {
   list-style: none;
 }
+
 .menu-sidebar-links {
   list-style: none;
   padding: 0;
@@ -116,9 +117,9 @@ ul {
   display: block;
 }
 
-.submenu > li:hover, a:hover {
-  transition: .5s ease-in-out;
+.submenu > li:hover, .menu-sidebar-links a:hover {
   background: #009acc;
+  transition: .4s ease-in-out;
   border-radius: 5px;
 }
 </style>

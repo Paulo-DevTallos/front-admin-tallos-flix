@@ -8,7 +8,7 @@
     <div class="sidebar-wrapper">
       <!-- logo sidebar -->
       <div class="logo">
-        <a href="#" class="simple-text logo__container">
+        <a href="/#/admin/overview" class="simple-text logo__container">
           <div class="logo-img">
               <img src="img/TallosFlix.png" alt="Logo Tallosflix">
           </div>

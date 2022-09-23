@@ -33,7 +33,7 @@
     </div>
     <div  class="size-box form-content">   
       <div class="form-user" v-if="hiddenAdmin">
-        <form>
+        <form @submit.prevent="handleSubmitLogin">
           <div>
             <h2>Ambiente de Admin</h2>
           </div>
@@ -55,11 +55,11 @@
             v-model="user.password"
             :addonLeftIcon="'nc-icon nc-lock-circle-open'"
           />
-          <button type="submit">Entrar</button>
+          <button type="submit" class="btn-acess">Entrar</button>
         </form>
       </div>
       <div class="form-user" v-if="hiddenUser">
-        <form @submit.prevent="testeForm">
+        <form>
           <div>
             <h2>Ambiente de Usuário</h2>
           </div>
@@ -81,7 +81,7 @@
             v-model="user.password"
             :addonLeftIcon="'nc-icon nc-lock-circle-open'"
           />
-          <button type="submit">Entrar</button>
+          <button type="submit" class="btn-acess">Entrar</button>
         </form>
       </div>
     </div>
@@ -100,14 +100,14 @@ export default {
       hiddenAdmin: false,
       hiddenUser: false,
       user: {
-        email: null,
-        password: null,
+        email: '',
+        password: '',
       }
     };
   },
   methods: {
-    testeForm() {
-      alert(`${this.user.email}, ${this.user.password}`)
+    async handleSubmitLogin() {
+      await this.$store.dispatch('handleSubmitLogin', this.user)
     },
     showLoginDisplay() {
       this.displayNone = true;
@@ -163,7 +163,7 @@ export default {
 
 .size-box h1 {
   font-size: 40px;
-  margin: 5px;
+  margin: 30px 0;
 }
 
 .size-info {
@@ -198,6 +198,12 @@ export default {
 
 .login-area .login {
   padding: 50px 30px;
+  transition: .5s ease;
+}
+
+.login-area .login:hover {
+  background-color: #00789f;
+  border-radius: 10px;
 }
 
 .form-content {
@@ -224,21 +230,21 @@ export default {
 
 @keyframes blow {
   0% {
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(0.0);
-      position: fixed;
-      top: 50%;
-      right: -100%;
-      transform: translate(-50%, -50%);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.0);
+    position: fixed;
+    top: 50%;
+    right: -100%;
+    transform: translate(-50%, -50%);
   }
   100% {
-      opacity: 1;
-      visibility: visible;
-      position: fixed;
-      top: 50%;
-      right: 0;
-      transform: translate(-50%, -50%);
+    opacity: 1;
+    visibility: visible;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -261,7 +267,17 @@ export default {
   border: 1px solid;
 }
 
-.form-user button {
+.form-user .btn-acess {
   margin-top: 15px;
+  padding: 10px;
+  border: none;
+  color: #fff;
+  box-shadow: -3px 4px 2px #aebaf9;
+  background: #009acc;
+  transition: .4s ease-in-out;
+}
+
+.form-user .btn-acess:hover {
+  background-color: #00789f;
 }
 </style>
