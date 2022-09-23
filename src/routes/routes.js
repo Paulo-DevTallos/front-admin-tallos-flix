@@ -16,6 +16,15 @@ import UsersReports from '../pages/UsersReports'
 import MoviesReports from '../pages/MoviesReports'
 import LogsReports from '../pages/LogsReports'
 
+//realizando checkagem de permissão para acesso as rotas
+const guard = () => (to, from, next) => {
+  if (localStorage.getItem('token') || '') {
+    next()
+  } else {
+    next('/login')
+  }
+}
+
 const routes = [
   {
     path: '/login',
@@ -26,6 +35,7 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
+    beforeEnter: guard(),
     component: DashboardLayout,
     //redirect: '/admin/overview',
     children: [
