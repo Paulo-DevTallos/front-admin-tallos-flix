@@ -81,7 +81,7 @@
             v-model="user.password"
             :addonLeftIcon="'nc-icon nc-lock-circle-open'"
           />
-          <button type="submit">Entrar</button>
+          <button type="submit" class="btn-acess">Entrar</button>
         </form>
       </div>
     </div>
@@ -100,8 +100,8 @@ export default {
       hiddenAdmin: false,
       hiddenUser: false,
       user: {
-        email: null,
-        password: null,
+        email: '',
+        password: '',
       }
     };
   },
