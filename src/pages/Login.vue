@@ -33,7 +33,7 @@
     </div>
     <div  class="size-box form-content">   
       <div class="form-user" v-if="hiddenAdmin">
-        <form @submit.prevent="testeForm">
+        <form @submit.prevent="handleSubmitLogin">
           <div>
             <h2>Ambiente de Admin</h2>
           </div>
@@ -106,8 +106,8 @@ export default {
     };
   },
   methods: {
-    testeForm() {
-      console.log(this.user)
+    async handleSubmitLogin() {
+      await this.$store.dispatch('handleSubmitLogin', this.user)
     },
     showLoginDisplay() {
       this.displayNone = true;
@@ -163,7 +163,7 @@ export default {
 
 .size-box h1 {
   font-size: 40px;
-  margin: 5px;
+  margin: 30px 0;
 }
 
 .size-info {
@@ -198,6 +198,12 @@ export default {
 
 .login-area .login {
   padding: 50px 30px;
+  transition: .5s ease;
+}
+
+.login-area .login:hover {
+  background-color: #00789f;
+  border-radius: 10px;
 }
 
 .form-content {
