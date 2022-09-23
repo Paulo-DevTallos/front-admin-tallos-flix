@@ -21,9 +21,7 @@ export default {
     //list users
     async listUser() {
       await Service.listar().then(res => {
-        console.log(res.data)
-        return this.users = res.data
-
+        return JSON.stringify(this.users = res.data)
       })
     }
   },
