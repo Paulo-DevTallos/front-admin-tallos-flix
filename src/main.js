@@ -16,6 +16,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
+import Store from './store'
 
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
@@ -45,6 +46,7 @@ const router = new VueRouter({
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store: Store,
   render: h => h(App),
   router
 })
