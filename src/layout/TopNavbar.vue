@@ -32,9 +32,12 @@
             <a class="dropdown-item" href="#">Separated link</a>
           </base-dropdown>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <div @click="logout" class="nav-link">
               Log out
-            </a>
+            </div>
+            <!--<a href="#" class="nav-link">
+              Log out
+            </a>-->
           </li>
         </ul>
       </div>
@@ -55,6 +58,10 @@
       }
     },
     methods: {
+      logout() {
+        localStorage.clear()
+        this.$router.push('/login')
+      },
       capitalizeFirstLetter (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       },
@@ -75,5 +82,7 @@
 
 </script>
 <style>
-
+.nav-link {
+  cursor: pointer;
+}
 </style>
