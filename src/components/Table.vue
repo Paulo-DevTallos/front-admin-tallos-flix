@@ -25,11 +25,11 @@
               ></i>
             </td>
           </slot>
-          <choose-popup 
-            v-if="hidden_modal"
-          />
         </tr>
       </tbody>
+      <choose-popup 
+        v-if="hidden_modal"
+      />
     </table>
   </div>
 </template>
