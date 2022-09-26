@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!--<div class="actions-btn">
-      <button type="button" class="btn btn-danger" @click="teste(item)">Deletar usuário</button>
-    </div>-->
     <table class="table">
       <thead>
         <slot name="columns">
@@ -12,21 +9,33 @@
         </slot>
       </thead>
       <tbody>
-      <tr v-for="(item, index) in data" :key="index">
-        <slot :row="item">
-          <td v-for="column in columns" :key="column" v-if="hasValue(item, column)">{{itemValue(item, column)}}</td>
-          <td id="size-check">
-            <input type="checkbox" class="input-marker" @click="teste(item)" />
-          </td>
-        </slot>
-      </tr>
+        <tr v-for="(item, index) in data" :key="index">
+          <slot row="item">
+            <td 
+              v-for="column in columns"
+              :key="column"
+              v-if="hasValue(item, column)"
+            >
+              {{itemValue(item, column)}}
+            </td>
+            <td id="size-/check">
+              <i 
+                class="nc-icon nc-bullet-list-67"
+                @click="deleteUser(item._id)"
+              ></i>
+            </td>
+          </slot>
+        </tr>
       </tbody>
     </table>
   </div>
 </template>
 <script>
+import Service from '../services/axios-requests'
+
 export default {
   name: 'l-table',
+  emits: ['delete-user'],
   props: {
     columns: Array,
     data: Array,
@@ -44,9 +53,9 @@ export default {
       return item[column.toLowerCase()]
     },
 
-    teste(item) {
-      console.log(item._id)
-      this.hidden_modal = !this.hidden_modal
+    deleteUser(item) {
+      console.log(item)
+      Service.remove(item).then(res => console.log(res))
     }
   },
   mounted() {
@@ -65,5 +74,22 @@ export default {
 .input-marker {
   height: 25px;
   width: 15px;
+}
+
+.table i {
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.463);
+  cursor: pointer;
+  transition: .4s ease;
+}
+
+.table i:hover {
+  border: 1px solid #3cc8f6;
+  background-color: #66d9ff;
+  color: #fff;
+
 }
 </style>
