@@ -19,16 +19,20 @@ export default {
 
 <style>
 .box-modal {
-  position: absolute;
+  position: fixed;
   text-align: center;
   top: 0;
+  left: 0;
+  transform: translate(100%, 100%);
   background-color: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.264);
+  border: 1px solid black;
   border-radius: 7px;
   padding: 60px;
 }
 
-.box-modal button {
+.box-modal button:first-child {
   margin: 5px;
+  background-color: red;
+  color: #fff;
 }
 </style>
