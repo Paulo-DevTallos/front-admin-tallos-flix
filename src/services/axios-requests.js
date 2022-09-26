@@ -10,7 +10,6 @@ export default {
   },
 
   remove: (id) => {
-    console.log(id)
     return http.delete(`/users/${id}`)
   }
 }
