@@ -10,13 +10,18 @@ export default new vuex.Store({
       email: '',
       password: '',
     },
-    token: ''
+    token: '',
+    users: [],
   },
   mutations: {
     authLogin(state, payload) {
       state.user = payload.user
       state.token = payload.access_token
-    } 
+    },
+    
+    getUsers(state, payload) {
+      state.users = payload
+    },
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -34,6 +39,14 @@ export default new vuex.Store({
         context.commit('authLogin', res.data)
 
         window.location.replace('/#/admin/overview')
+      })
+    },
+
+    handleUsersRequest(context, users) {
+      Service.listar().then(res => {
+        console.log(res)
+
+        context.commit('getUsers', res.data)
       })
     }
   }
