@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/#/admin/user">Dashboard TallosFlix {{ $store.state.user.email }}</a>
+      <a class="navbar-brand" href="/#/admin/user">Admin TallosFlix - {{ username }}</a>
       <button 
         type="button"
         class="navbar-toggler navbar-toggler-right"
@@ -35,9 +35,6 @@
             <div @click="logout" class="nav-link">
               Log out
             </div>
-            <!--<a href="#" class="nav-link">
-              Log out
-            </a>-->
           </li>
         </ul>
       </div>
@@ -54,7 +51,8 @@
     },
     data () {
       return {
-        activeNotifications: false
+        activeNotifications: false,
+        username: localStorage.getItem('username')
       }
     },
     methods: {
@@ -77,6 +75,9 @@
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
       }
+    },
+    created(){ 
+      console.log(this.$store)
     }
   }
 
