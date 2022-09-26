@@ -21,10 +21,13 @@
             <td id="size-/check">
               <i 
                 class="nc-icon nc-bullet-list-67"
-                @click="deleteUser(item._id)"
+                @click="handleEventModal"
               ></i>
             </td>
           </slot>
+          <choose-popup 
+            v-if="hidden_modal"
+          />
         </tr>
       </tbody>
     </table>
@@ -32,17 +35,18 @@
 </template>
 <script>
 import Service from '../services/axios-requests'
+import ChoosePopup from './Popups/ChoosePopup.vue'
 
 export default {
   name: 'l-table',
-  emits: ['delete-user'],
+  components: { ChoosePopup },
   props: {
     columns: Array,
     data: Array,
   },
   data() {
     return {
-      hidden_modal: false
+      hidden_modal: false,
     }
   },
   methods: {
@@ -53,9 +57,8 @@ export default {
       return item[column.toLowerCase()]
     },
 
-    deleteUser(item) {
-      console.log(item)
-      //Service.remove(item).then(res => console.log(res))
+    handleEventModal() {
+      this.hidden_modal = !this.hidden_modal
     }
   },
   mounted() {
