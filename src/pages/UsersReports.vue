@@ -14,7 +14,8 @@
             <l-table 
               class="table-hover table-striped"
               :columns="columns"
-              :data="users">
+              :data="users"
+            >
             </l-table>
             <choose-popup 
               v-if="hidden_modal"
@@ -28,7 +29,6 @@
 <script>
 import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
-import Service from '../services/axios-requests'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 
 const tableColumns = ['Name', 'Email']
@@ -42,20 +42,18 @@ export default {
   data () {
     return {
       columns: [...tableColumns],
-      users: [],
+      users: this.$store.state.users,
       hidden_modal: false
     }
   },
 
   methods: {
-    async listUsers() {
-      await Service.listar().then(res => {
-        return this.users = res.data
-      })
-    },
+    getAllUsers() {  
+      this.$store.dispatch('handleUsersRequest', this.users)
+    }
   },
-  mounted() {
-    this.listUsers()
+  created() {
+    this.getAllUsers()
   }
 }
 </script>
