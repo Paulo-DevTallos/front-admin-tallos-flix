@@ -55,7 +55,7 @@ export default {
 
     deleteUser(item) {
       console.log(item)
-      Service.remove(item).then(res => console.log(res))
+      //Service.remove(item).then(res => console.log(res))
     }
   },
   mounted() {
