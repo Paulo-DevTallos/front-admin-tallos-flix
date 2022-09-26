@@ -10,6 +10,12 @@
             <template slot="header">
               <h4 class="card-title">Lista de usuários TallosFlix</h4>
               <p class="card-category">Disponibilidade de usuários cadastrados na plataforma</p>
+              <div class="content input-space">
+                <base-input 
+                  placeholder="Encontre um usuário"
+                />
+                <button class="btn btn-primary">Pesquisar</button>
+              </div>
             </template>
             <l-table 
               class="table-hover table-striped"
@@ -17,9 +23,6 @@
               :data="users"
             >
             </l-table>
-            <choose-popup 
-              v-if="hidden_modal"
-            />
           </card>
         </div>
       </div>
@@ -29,7 +32,6 @@
 <script>
 import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
-import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 
 const tableColumns = ['Name', 'Email']
 
@@ -37,28 +39,39 @@ export default {
   components: {
     LTable,
     Card,
-    ChoosePopup,
   },
   data () {
     return {
       columns: [...tableColumns],
       users: this.$store.state.users,
-      hidden_modal: false
     }
   },
 
   methods: {
     getAllUsers() {  
       this.$store.dispatch('handleUsersRequest', this.users)
-    }
+    },
   },
-  created() {
+  mounted() {
     this.getAllUsers()
   }
 }
 </script>
 <style>
 .actions-btn button {
-  margin: 10px 15px;
+  margin: 10px;
+}
+
+.input-space {
+  display: flex;
+  margin: 20px 5px;
+}
+
+.input-space input {
+  width: 330px;
+}
+
+.btn {
+  padding: 8px 10px;
 }
 </style>
