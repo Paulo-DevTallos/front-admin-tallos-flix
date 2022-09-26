@@ -59,7 +59,7 @@
         </form>
       </div>
       <div class="form-user" v-if="hiddenUser">
-        <form>
+        <form @submit.prevent="testeUser">
           <div>
             <h2>Ambiente de Usuário</h2>
           </div>
@@ -106,8 +106,8 @@ export default {
     };
   },
   methods: {
-    async handleSubmitLogin() {
-      await this.$store.dispatch('handleSubmitLogin', this.user)
+    handleSubmitLogin() {
+      this.$store.dispatch('handleSubmitLogin', this.user)
     },
     showLoginDisplay() {
       this.displayNone = true;
@@ -121,8 +121,6 @@ export default {
       if (this.hiddenAdmin === true) this.hiddenAdmin = false;
       this.hiddenUser = !this.hiddenUser;
     }
-  },
-  mounted() {
   },
   components: { BaseInput }
 }  
