@@ -44,7 +44,7 @@ export default new vuex.Store({
 
     handleUsersRequest(context, users) {
       Service.listar().then(res => {
-        console.log(res)
+        console.log(users)
 
         context.commit('getUsers', res.data)
       })
