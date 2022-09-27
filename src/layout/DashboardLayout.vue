@@ -13,12 +13,6 @@
           </sidebar-link>
         </li>
         <li>
-          <sidebar-link to="/admin/user">
-            <i class="nc-icon nc-circle-09"></i>
-            <p>Perfil</p>    
-          </sidebar-link>
-        </li>
-        <li>
           <sidebar-link to="/admin/users">
             <i class="nc-icon nc-single-02"></i>
             <p>Listar usuários</p>

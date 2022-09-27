@@ -1,20 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/#/admin/user">Dashboard TallosFlix {{ $store.state.user.email }}</a>
-      <button 
-        type="button"
-        class="navbar-toggler navbar-toggler-right"
-        :class="{toggled: $sidebar.showSidebar}"
-        aria-controls="navigation-index"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-        @click="toggleSidebar"
-      >
-        <span class="navbar-toggler-bar burger-lines"></span>
-        <span class="navbar-toggler-bar burger-lines"></span>
-        <span class="navbar-toggler-bar burger-lines"></span>
-      </button>
+      <sidebar-link to="/admin/user" class="navbar-brand">
+        Admin TallosFlix - {{ username }}
+      </sidebar-link>
       <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
@@ -22,22 +11,10 @@
               Account
             </a>
           </li>
-          <base-dropdown title="Dropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something</a>
-            <div class="divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </base-dropdown>
           <li class="nav-item">
             <div @click="logout" class="nav-link">
               Log out
             </div>
-            <!--<a href="#" class="nav-link">
-              Log out
-            </a>-->
           </li>
         </ul>
       </div>
@@ -54,7 +31,8 @@
     },
     data () {
       return {
-        activeNotifications: false
+        activeNotifications: false,
+        username: localStorage.getItem('username')
       }
     },
     methods: {
@@ -77,6 +55,9 @@
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
       }
+    },
+    created(){ 
+      console.log(this.$store)
     }
   }
 
