@@ -59,6 +59,7 @@ export default {
 }
 #nav-link {
   cursor: pointer;
+  color: #808080;
   transition: .4s ease-in-out;
   padding: 7px 12px;
 }
