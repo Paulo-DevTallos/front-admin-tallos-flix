@@ -13,7 +13,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th v-for="(column, index) in columns" :key="index">
+                  <th class="header-table" v-for="(column, index) in columns" :key="index">
                     {{ column }}
                   </th>
                 </tr>
@@ -63,10 +63,4 @@ export default {
 </script>
 
 <style>
-#actions-op {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
 </style>
