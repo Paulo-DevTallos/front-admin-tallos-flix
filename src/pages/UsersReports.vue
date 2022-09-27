@@ -1,77 +1,73 @@
 <template>
   <div class="content">
-    <div class="container-fluid">
+    <div class="container-fliud">
       <div class="row">
         <div class="col-12">
-          <card 
-            class="strpied-tabled-with-hover"
+          <card
+            class="strpied-tabled-width-hover"
             body-classes="table-full-width table-responsive"
           >
             <template slot="header">
-              <h4 class="card-title">Lista de usuários TallosFlix</h4>
-              <p class="card-category">Disponibilidade de usuários cadastrados na plataforma</p>
-              <div class="content input-space">
-                <base-input 
-                  placeholder="Encontre um usuário"
-                />
-                <button class="btn btn-primary">Pesquisar</button>
-              </div>
+              <h4>Relatório de usuários</h4>
+              <p class="card-category">Usuários disponíveis na plataforma</p>
             </template>
-            <l-table 
-              class="table-hover table-striped"
-              :columns="columns"
-              :data="users"
-            >
-            </l-table>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th
+                    v-for="(column, index) in columns"
+                    :key="index"
+                  >
+                  {{ column }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody v-for="user in users" :key="user._id">
+                <tr>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    <div id="actions-op">
+                      <i class="nc-icon nc-settings-gear-64"></i>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </card>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import LTable from 'src/components/Table.vue'
-import Card from 'src/components/Cards/Card.vue'
-
-const tableColumns = ['Name', 'Email']
-
+import LTable from '../components/Table.vue'
+import Card from '../components/Cards/Card.vue'
+import Service from '../services/axios-requests'
+const tableColumns = ['Name', 'E-mail']
 export default {
+  name: 'UserReports',
   components: {
     LTable,
     Card,
   },
-  data () {
+  data() {
     return {
       columns: [...tableColumns],
-      users: this.$store.state.users,
+      users: [],
     }
   },
-
   methods: {
-    getAllUsers() {  
-      this.$store.dispatch('handleUsersRequest', this.users)
-    },
+    listUsers() {
+      Service.listar().then(res => {
+        const parseUser = JSON.parse(JSON.stringify(res.data))
+        return this.users = parseUser
+      })
+    }
   },
   mounted() {
-    this.getAllUsers()
+    this.listUsers()  
   }
-}
+}  
 </script>
-<style>
-.actions-btn button {
-  margin: 10px;
-}
-
-.input-space {
-  display: flex;
-  margin: 20px 5px;
-}
-
-.input-space input {
-  width: 330px;
-}
-
-.btn {
-  padding: 8px 10px;
-}
-</style>
