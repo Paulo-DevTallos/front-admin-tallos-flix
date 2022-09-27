@@ -12,6 +12,7 @@ export default new vuex.Store({
     },
     token: '',
     users: [],
+    movies: [],
   },
   mutations: {
     authLogin(state, payload) {
@@ -22,6 +23,10 @@ export default new vuex.Store({
     getUsers(state, payload) {
       state.users = payload
     },
+
+    getMovies(state, payload) {
+      state.movies = payload
+    }
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -47,6 +52,14 @@ export default new vuex.Store({
         console.log(users)
 
         context.commit('getUsers', res.data)
+      })
+    },
+
+    handleMoviesRequest(context, movies) {
+      Service.listarMovies().then(res => {
+        console.log(movies)
+
+        context.commit('getMovies', res.data)
       })
     }
   }
