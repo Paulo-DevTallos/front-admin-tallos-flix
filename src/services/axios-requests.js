@@ -5,6 +5,10 @@ export default {
     return http.get('/users')
   },
 
+  update: (data, id) => {
+    return http.patch(`/users/${id}`, data)
+  },
+
   listarMovies: () => {
     return http.get('/movies')
   },
