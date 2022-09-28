@@ -45,8 +45,8 @@
             <form-update
               v-if="callUpdateForm"
               :userData="userToUpdate"
-              @updateUser="(updateUser)"
-              @closeUpdateModal="(closeModalUpdate)"
+              @updateUser="updateUser"
+              @closeUpdateModal="closeUpdateModal"
             />
           </card>
         </div>
@@ -96,10 +96,12 @@ export default {
       this.hiddenChooseModal = false
     },
 
+    closeUpdateModal() {
+      this.closeUpdateModal = false
+    },
+
     editUser(id, user) {
       this.callUpdateForm = !this.callUpdateForm
-      console.log(id, user)
-
       this.userToUpdate.name = user.name
       this.userToUpdate.email = user.email
 
@@ -108,10 +110,14 @@ export default {
 
     updateUser(user) {
       const id = this.update_id
+      const parseUser = JSON.parse(JSON.stringify(user))
 
-      console.log(id)
+      Service.update(id, parseUser).then(res => {
+        if (res.status === 200) {
+          this.listUsers()  
+        }
+      })
 
-      Service.update(user, id)
       this.callUpdateForm = false
     },
 
