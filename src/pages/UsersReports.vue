@@ -29,12 +29,12 @@
                       class="nc-icon nc-settings-gear-64"
                     ></i>
                   </div>
-                  <!--<choose-modal 
+                  <choose-popup 
                     :data="user.name"
                     v-if="hiddenChooseModal && id === user._id"
                     @removeUser="deleteUser(user._id)"
                     @closeModal="hiddenModal"
-                  />-->
+                  />
                 </div> 
               </div>
             </div>
@@ -50,17 +50,18 @@ import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
 import Service from '../services/axios-requests'
 //import ActionsBar from '../components/ActionsBar.vue'
-//import ChooseModal from '../components/ChooseModal.vue'
+import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 export default {
   components: {
     LTable,
     Card,
-  },
+    ChoosePopup
+},
   data () {
     return {
       users: [],
-      /*hiddenChooseModal: false,
-      id: 0*/
+      hiddenChooseModal: false,
+      id: 0
     }
   },
   methods: {
