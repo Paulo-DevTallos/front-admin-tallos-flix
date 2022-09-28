@@ -1,38 +1,53 @@
 <template>
-  <div class="box-modal">
-    <div>
-      Escolha sua ação
-    </div>
-    <div>
-      <button @click="$emit('delete_user')" class="btn btn-danger">Deletar usuario</button>
-      <button class="btn btn-warning">Atualizar usuario</button>
+  <div class="card-modal">
+    Tem certeza que deseja excluir o usuário {{ data }}?
+    <div class="btn-size-container">
+      <button @click="$emit('removeUser')">Excluir</button>
+      <button @click="$emit('closeModal')">Cancelar</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ChoosePopup',
-  emits: ['delete_user']
-}  
+  name: 'ChooseModal',
+  props: {
+    data: Array
+  },
+  emits: ['removeUser', 'closeModal']
+}
 </script>
 
 <style scoped>
-.box-modal {
+.card-modal {
   position: fixed;
+  top: 50%;  
+  left: 50%;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: rgb(255, 245, 236);
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.342);
   text-align: center;
-  top: 0;
-  left: 0;
-  transform: translate(100%, 100%);
-  background-color: #fff;
-  border: 1px solid black;
-  border-radius: 7px;
-  padding: 60px;
+  transform: translate(-50%, -50%);
 }
-
-.box-modal button:first-child {
-  margin: 5px;
-  background-color: red;
+.card-modal .btn-size-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+.card-modal .btn-size-container button {
+  margin: 3px;
+  padding: 10px 20px;
+  border-radius: 5px;
   color: #fff;
+}
+.card-modal .btn-size-container button:first-child {
+  background-color: red;
+  border: none;
+}
+.card-modal .btn-size-container button:last-child {
+  background-color: orange;
+   border: none;
 }
 </style>
