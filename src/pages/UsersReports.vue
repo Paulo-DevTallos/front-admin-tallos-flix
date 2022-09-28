@@ -44,6 +44,9 @@
             </div>
             <form-update
               v-if="callUpdateForm"
+              :userData="userToUpdate"
+              @updateUser="(updateUser)"
+              @closeUpdateModal="(closeModalUpdate)"
             />
           </card>
         </div>
@@ -69,9 +72,11 @@ export default {
   data () {
     return {
       users: [],
+      userToUpdate: { name: '', email: '' },
       hiddenChooseModal: false,
       callUpdateForm: false,
-      id: 0
+      id: 0,
+      update_id: null
     }
   },
   methods: {
@@ -94,6 +99,20 @@ export default {
     editUser(id, user) {
       this.callUpdateForm = !this.callUpdateForm
       console.log(id, user)
+
+      this.userToUpdate.name = user.name
+      this.userToUpdate.email = user.email
+
+      this.update_id = id
+    },
+
+    updateUser(user) {
+      const id = this.update_id
+
+      console.log(id)
+
+      Service.update(user, id)
+      this.callUpdateForm = false
     },
 
     deleteUser(id) {
