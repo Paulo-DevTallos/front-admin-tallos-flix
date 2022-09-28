@@ -14,28 +14,32 @@
             <template>
               <!--<actions-bar />-->
             </template>
-            <div id="users-table-header">
-              <div>Nome</div>
-              <div>E-mail</div>
-              <div>Ações</div>
-            </div>
-            <div id="users-table-rows">
-              <div class="users-table-row" v-for="user in users" :key="user._id">
-                <div>{{ user.name }}</div>
-                <div>{{ user.email }}</div> 
-                <div @click="showChooseModal(user._id)"> 
-                  <div id="actions-op">
-                    <i 
-                      class="nc-icon nc-settings-gear-64"
-                    ></i>
-                  </div>
+            <div class="table-content">
+              <div id="users-table-header">
+                <div>Nome</div>
+                <div>E-mail</div>
+                <div>Ações</div>
+              </div>
+              <div id="users-table-rows">
+                <div class="users-table-row" v-for="user in users" :key="user._id">
+                  <div>{{ user.name }}</div>
+                  <div>{{ user.email }}</div> 
+                  <!-- action buttons -->
+                  <div id="items-alignment"> 
+                    <div @click="showChooseModal(user._id)" id="actions-op">
+                      <font-awesome-icon icon="fa-solid fa-trash" />
+                    </div>
+                    <div id="actions-op">
+                      <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+                    </div>
+                  </div> 
                   <choose-popup 
                     :data="user.name"
                     v-if="hiddenChooseModal && id === user._id"
                     @removeUser="deleteUser(user._id)"
                     @closeModal="hiddenModal"
                   />
-                </div> 
+                </div>
               </div>
             </div>
           </card>
@@ -76,7 +80,7 @@ export default {
       this.id = id
     },
     hiddenModal() {
-      if (this.hiddenChooseModal) return false
+      this.hiddenChooseModal = false
     },
     deleteUser(id) {
       Service.remove(id).then(res => {
@@ -93,6 +97,12 @@ export default {
 </script>
 
 <style>
+.table-content {
+  padding-left: 30px;
+}
+#items-alignment {
+  display: flex;
+}
 #actions-op {
   background-color: #80808049;
   display: flex;
@@ -105,9 +115,16 @@ export default {
   transition: .4s ease;
   cursor: pointer;
   text-align: end;
+  margin: 3px;
 }
-#actions-op:hover {
-  background-color: #80808068;
+#actions-op:first-child:hover {
+  background-color: red;
+  color: #fff;
+}
+
+#actions-op:last-child:hover {
+  background-color: #009acc;
+  color: #fff;
 }
 
 #users-table-header, 
