@@ -38,8 +38,8 @@
               <i class="nc-icon nc-quote text-danger"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Comentários</p>
-              <h4 class="card-title">23</h4>
+              <p class="card-category">Comentários dos filmes</p>
+              <h4 class="card-title">{{ $store.state.comments.length }}</h4>
             </div>
             <div slot="footer">
               <i class="fa fa-clock-o"></i>Last day
@@ -184,6 +184,7 @@ export default {
     return {
       users: [],
       movies: [],
+      comments: [],
       editTooltip: 'Edit Task',
       deleteTooltip: 'Remove',
       pieChart: {
@@ -275,12 +276,17 @@ export default {
     },
     renderMovies() {
       this.$store.dispatch('handleMoviesRequest', this.movies)
+    },
+    renderComments() {
+      this.$store.dispatch('handleCommentsRequest', this.comments)
+      console.log(this.comments)
     }
   },
 
   mounted() {
     this.renderUsers()
     this.renderMovies()
+    this.renderComments()
   }
 }
 </script>
