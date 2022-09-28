@@ -5,12 +5,8 @@ export default {
     return http.get('/users')
   },
 
-  listarMovies: () => {
-    return http.get('/movies')
-  },
-
-  listarComments: () => {
-    return http.get('/comments')
+  update: (id, data) => {
+    return http.patch(`/users/${id}`, data)
   },
 
   login: (data) => {

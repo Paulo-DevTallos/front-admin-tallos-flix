@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import vuex from 'vuex'
-import Service from '../services/axios-requests'
+import Service from '../services/axios-users.requests'
+import ServiceMovies from '../services/axios-movies.request'
+import ServiveComments from '../services/axios-comments.request'
 
 Vue.use(vuex)
 
@@ -12,6 +14,8 @@ export default new vuex.Store({
     },
     token: '',
     users: [],
+    movies: [],
+    comments: [],
   },
   mutations: {
     authLogin(state, payload) {
@@ -19,9 +23,17 @@ export default new vuex.Store({
       state.token = payload.access_token
     },
     
-    getUsers(state, payload) {
+    getAllUsers(state, payload) {
       state.users = payload
     },
+
+    getAllMovies(state, payload) {
+      state.movies = payload
+    },
+
+    getAllComments(state, payload) {
+      state.comments = payload
+    }
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -44,9 +56,24 @@ export default new vuex.Store({
 
     handleUsersRequest(context, users) {
       Service.listar().then(res => {
-        console.log(res)
+        console.log(users)
+        context.commit('getAllUsers', res.data)
+      })
+    },
 
-        context.commit('getUsers', res.data)
+    handleMoviesRequest(context, movies) {
+      ServiceMovies.getMovies().then(res => {
+        console.log(movies)
+
+        context.commit('getAllMovies', res.data)
+      })
+    },
+
+    handleCommentsRequest(context, comments) {
+      ServiveComments.getComments().then(res => {
+        console.log(comments)
+
+        context.commit('getAllComments', res.data)
       })
     }
   }

@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div  class="size-box form-content">   
+    <div  class="size-box form-content-area">   
       <div class="form-user" v-if="hiddenAdmin">
         <form @submit.prevent="handleSubmitLogin">
           <div>
@@ -204,7 +204,7 @@ export default {
   border-radius: 10px;
 }
 
-.form-content {
+.form-content-area {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -217,7 +217,7 @@ export default {
   border-radius: 15px;
   width: 400px;
   position: fixed;
-  animation: blow .7s ease-in-out;
+  animation: slide .7s ease-in-out;
 }
 
 .form-user h2 {
@@ -226,7 +226,7 @@ export default {
   margin: 0 0 20px;
 }
 
-@keyframes blow {
+@keyframes slide {
   0% {
     opacity: 0;
     visibility: hidden;

@@ -2,7 +2,6 @@
     border-radius: $border-radius-base;
     background-color: $white-color;
     margin-bottom: 30px;
-
     .card-image{
         width: 100%;
         overflow: hidden;
@@ -126,7 +125,6 @@
         top: 0;
         width: 1px;
         background-color: $medium-gray;
-        card-body: "";
         position: absolute;
     }
 
