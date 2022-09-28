@@ -18,6 +18,11 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import Store from './store'
 
+//import fontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
 
@@ -26,8 +31,12 @@ import routes from './routes/routes'
 
 import './registerServiceWorker'
 // plugin setup
+library.add(fas)
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+Vue.config.productionTip = false
 
 // configure router
 const router = new VueRouter({
