@@ -7,38 +7,39 @@
       >
         <template slot="header">
           <h4 class="header-table">Filmes TallosFlix</h4>
-          <p>Filmes disponíveis na plataforma</p>
+          <p class="card-category">Filmes disponíveis na plataforma</p>
         </template>
-      </card>
-      <div class="container-box card">
-        <ul>
-          <li v-for="movie in movies" :key="movie._id">
-            <card class="display-movie">
-              <div>
-                <div class="movie-descriptions" @click="() => rollingMovieDescription(movie._id)">
-                  <div></div>
-                  <h3>{{ movie.title }}</h3>
-                  <p>{{ movie.plot }}</p>
-                  <!-- movies description -->
-                  <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
+        <div class="container-box card">
+          <ul>
+            <li v-for="movie in movies" :key="movie._id">
+              <card class="display-movie">
+                <div>
+                  <div class="movie-descriptions" @click="rollingMovieDescription(movie._id)">
                     <div>
-                      <div class="image-container">
-                        <img :src="movie.poster" alt="">
+                      <h3>{{ movie.title }}</h3>
+                      <p>{{ movie.plot }}</p>
+                    </div>
+                    <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
+                      <div>
+                        <div class="image-container">
+                          <img :src="movie.poster" alt="imagem do filme">
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </card>
-          </li>
-        </ul>
-      </div>
+              </card>
+            </li>
+          </ul>
+        </div>
+      </card>
     </div>
   </div>
 </template>
 
 <script>
-import Service from '../services/axios-users.requests'
+import ServiceMovies from '../services/axios-movies.request'
+
 export default {
   name: 'MoviesReports',
   data() {
@@ -50,10 +51,8 @@ export default {
   },
   methods: {
     handleRequestMovies() {
-      Service.listarMovies().then(res => {
-        const moviesParse = JSON.parse(JSON.stringify(res.data))
-
-        return this.movies = moviesParse
+      ServiceMovies.getMovies().then(res => {
+        this.movies = res.data
       })
     },
 
