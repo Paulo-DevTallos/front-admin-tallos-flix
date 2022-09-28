@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import vuex from 'vuex'
-import Service from '../services/axios-requests'
+import Service from '../services/axios-users.requests'
 
 Vue.use(vuex)
 

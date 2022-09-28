@@ -58,7 +58,7 @@
 <script>
 import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
-import Service from '../services/axios-requests'
+import Service from '../services/axios-users.requests'
 //import ActionsBar from '../components/ActionsBar.vue'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import FormUpdate from '../components/FormUpdate.vue'

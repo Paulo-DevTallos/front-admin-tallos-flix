@@ -34,7 +34,6 @@
   </div>
 </template>
 <script>
-import Service from '../services/axios-requests'
 import ChoosePopup from './Popups/ChoosePopup.vue'
 
 export default {

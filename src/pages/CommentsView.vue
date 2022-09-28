@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Service from '../services/axios-requests'
+import Service from '../services/axios-users.requests'
 
 export default {
   name: 'CommentsView',
