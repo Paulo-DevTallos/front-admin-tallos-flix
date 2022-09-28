@@ -10,9 +10,9 @@
 
 <script>
 export default {
-  name: 'ChooseModal',
+  name: 'ChoosePopup',
   props: {
-    data: Array
+    data: String
   },
   emits: ['removeUser', 'closeModal']
 }
@@ -25,10 +25,26 @@ export default {
   left: 50%;
   padding: 20px;
   border-radius: 10px;
-  background-color: rgb(255, 245, 236);
+  background-color: #fbfeff;
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.342);
   text-align: center;
   transform: translate(-50%, -50%);
+  animation: blow .5s ease-in-out;
+}
+@keyframes blow {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.0) translate(-50%, -50%);
+  }
+  70% {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.2) translate(-50%, -50%);
+  }
+  100% {
+    transform: scale(1.1) translate(-50%, -50%);
+  }
 }
 .card-modal .btn-size-container {
   display: flex;
