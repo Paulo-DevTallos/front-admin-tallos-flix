@@ -29,7 +29,7 @@
                     <div @click="showChooseModal(user._id)" id="actions-op">
                       <font-awesome-icon icon="fa-solid fa-trash" />
                     </div>
-                    <div id="actions-op">
+                    <div @click="editUser(user._id, user)" id="actions-op">
                       <font-awesome-icon icon="fa-solid fa-pen-to-square" />
                     </div>
                   </div> 
@@ -42,6 +42,9 @@
                 </div>
               </div>
             </div>
+            <form-update
+              v-if="callUpdateForm"
+            />
           </card>
         </div>
       </div>
@@ -55,16 +58,19 @@ import Card from 'src/components/Cards/Card.vue'
 import Service from '../services/axios-requests'
 //import ActionsBar from '../components/ActionsBar.vue'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
+import FormUpdate from '../components/FormUpdate.vue'
 export default {
   components: {
     LTable,
     Card,
-    ChoosePopup
+    ChoosePopup,
+    FormUpdate
 },
   data () {
     return {
       users: [],
       hiddenChooseModal: false,
+      callUpdateForm: false,
       id: 0
     }
   },
@@ -75,13 +81,21 @@ export default {
         this.users = dataParse
       })
     },
+    
     showChooseModal(id) {
       this.hiddenChooseModal = !this.hiddenChooseModal
       this.id = id
     },
+    
     hiddenModal() {
       this.hiddenChooseModal = false
     },
+
+    editUser(id, user) {
+      this.callUpdateForm = !this.callUpdateForm
+      console.log(id, user)
+    },
+
     deleteUser(id) {
       Service.remove(id).then(res => {
         if (res.status === 200) {
