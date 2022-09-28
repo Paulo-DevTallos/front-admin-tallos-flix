@@ -1,17 +1,26 @@
 <template>
   <div>
-    View de comentarios
+    <ul>
+      <li v-for="comment in comments" :key="comment._id">{{ comment.text }}</li>
+    </ul>
   </div>
 </template>
 
 <script>
-import Service from '../services/axios-users.requests'
+import ServiceComments from '../services/axios-comments.request'
 
 export default {
   name: 'CommentsView',
+  data() {
+    return {
+      comments: [],
+    }
+  },
   methods: {
-    async handleRequestComments() {
-      await Service.listarComments().then(res => console.log(res))
+    handleRequestComments() {
+      ServiceComments.getComments().then(res => {
+        this.comments = res.data
+      })
     }
   },
   mounted() {
