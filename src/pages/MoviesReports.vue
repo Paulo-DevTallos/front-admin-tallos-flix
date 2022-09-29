@@ -15,11 +15,17 @@
               <li v-for="movie in movies" :key="movie._id">
                 <card class="display-movie">
                   <div>
-                    <div class="movie-descriptions" @click="rollingMovieDescription(movie._id)">
-                      <div>
-                        <h3 class="card-title">{{ movie.title }} - {{ movie.year }}</h3>
-                        <p class="card-category">{{ movie.plot }}</p>
+                    <div class="movie-descriptions">
+                      <div class="movie-commands">
+                        <div @click="rollingMovieDescription(movie._id)">
+                          <h3 class="card-title">{{ movie.title }} - {{ movie.year }}</h3>
+                          <p class="card-category">{{ movie.plot }}</p>
+                        </div>
+                        <div class="icon-menu" @click="optionModal(movie._id)"> 
+                          <font-awesome-icon icon="fa-solid fa-bars" />
+                        </div>  
                       </div>
+                      <option-popup />
                       <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
                         <div class="info-movies">
                           <div v-if="exibitionImage" class="image-empty image-container">
@@ -108,10 +114,12 @@
 </template>
 
 <script>
+import OptionPopup from '../components/Popups/OptionPopup.vue'
 import ServiceMovies from '../services/axios-movies.request'
 
 export default {
   name: 'MoviesReports',
+  components: { OptionPopup },
   data() {
     return {
       movies: [],
@@ -129,6 +137,10 @@ export default {
     rollingMovieDescription(id) {
       this.hiddenMovieDescription = !this.hiddenMovieDescription
       this.id = id
+    },
+
+    optionModal(id) {
+      console.log(id)
     }
   },
   mounted() {
@@ -157,6 +169,20 @@ export default {
 }
 .image-container {
   width: 20%;
+}
+
+.movie-commands {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-menu {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px;
+  box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.200);
+  background-color: #80808068;
 }
 
 .image-container img {
@@ -192,6 +218,7 @@ export default {
   box-shadow: 2px 2px 5px #80808080;
   animation: down .5s ease-in-out;
   padding: 20px;
+  margin-top: 20px;
 }
 
 @keyframes down {
@@ -199,7 +226,7 @@ export default {
     transform: translateY(-15px);
   }
   to {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 }
 
@@ -209,6 +236,7 @@ export default {
 
 .movie-descriptions p {
   color: gray;
+  margin-bottom: 10px;
 }
 
 .movie-descriptions h3 {
