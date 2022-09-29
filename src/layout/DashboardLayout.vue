@@ -25,17 +25,17 @@
           </sidebar-link>
         </li>
         <li>
+          <sidebar-link to="/admin/movies">
+            <i class="nc-icon nc-tv-2"></i>
+            <p>Filmes</p>
+          </sidebar-link>
+        </li>
+        <li>
           <sidebar-link to="#">
             <i class="nc-icon nc-notes"></i>
             <p>Relatórios</p>
           </sidebar-link>
           <ul class="submenu">
-            <li>
-              <sidebar-link to="/admin/movies">
-                <i class="nc-icon nc-tv-2"></i>
-                <p>Filmes</p>
-              </sidebar-link>
-            </li>
             <li>
               <sidebar-link to="/admin/comments">
                 <i class="nc-icon nc-quote"></i>
