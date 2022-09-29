@@ -59,7 +59,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .form-content {
   width: 400px;
   text-align: center;

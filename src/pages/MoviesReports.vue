@@ -9,28 +9,112 @@
           <h4 class="header-table">Filmes TallosFlix</h4>
           <p class="card-category">Filmes disponíveis na plataforma</p>
         </template>
-        <div class="container-box card">
-          <ul>
-            <li v-for="movie in movies" :key="movie._id">
-              <card class="display-movie">
-                <div>
-                  <div class="movie-descriptions" @click="rollingMovieDescription(movie._id)">
-                    <div>
-                      <h3>{{ movie.title }}</h3>
-                      <p>{{ movie.plot }}</p>
-                    </div>
-                    <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
-                      <div>
-                        <div class="image-container">
-                          <img :src="movie.poster" alt="imagem do filme">
+        <div class="table-content">
+          <div class="container-box card">
+            <ul>
+              <li v-for="movie in movies" :key="movie._id">
+                <card class="display-movie">
+                  <div>
+                    <div class="movie-descriptions">
+                      <div class="movie-commands">
+                        <div @click="rollingMovieDescription(movie._id)">
+                          <h3 class="card-title">{{ movie.title }} - {{ movie.year }}</h3>
+                          <p class="card-category">{{ movie.plot }}</p>
+                        </div>
+                        <div class="icon-menu" @click="optionModal(movie._id)"> 
+                          <font-awesome-icon icon="fa-solid fa-bars" />
+                        </div>  
+                      </div>
+                      <option-popup 
+                        v-if="hiddenOptionModal && id === movie._id"
+                        @closeModal="closeOptions"
+                        @deleteMovie="deleteMovie(movie._id)"
+                        @updateMovie="updateMovie(movie._id)"
+                      />
+                      <form-update-movie 
+                        v-if="hiddenFormUpdateMovie"  
+                      />
+                      <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
+                        <div class="info-movies">
+                          <!--<div class="image-empty image-container">
+                            <font-awesome-icon icon="fa-solid fa-image" />
+                          </div>-->
+                          <div class="image-container">
+                            <img :src="movie.poster" alt="imagem do filme">
+                          </div>
+                          <div class="information-movie">
+                            <div class="ratings">
+                              <div class="ratings">
+                                <p class="type">{{ movie.type }}</p>
+                              </div>
+                              <div class="ratings">
+                                <font-awesome-icon icon="fa-brands fa-imdb" />
+                                <div id="rating-resize">
+                                  <p>{{ movie.imdb.rating }} / {{ movie.imdb.votes }}</p>
+                                </div>
+                              </div>
+                              <div class="ratings">
+                                <font-awesome-icon id="icon-meter" icon="fa-solid fa-splotch" />
+                                <div id="rating-resize">
+                                  <p>{{ movie.tomatoes.viewer.meter }}%</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <h5 class="card-title">Plot</h5>
+                              <p>{{ movie.fullplot }}</p>
+                            </div>
+                            <div class="information-movie-painel">
+                              <div>
+                                <h5 class="card-title">Cast</h5>
+                                <p 
+                                  class="list-items"
+                                  v-for="(cast) in movie.cast" 
+                                  :key="`${movie._id}_${cast}`"
+                                >
+                                  {{ cast }}
+                                </p>
+                              </div>
+                              <div>
+                                <h5 class="card-title">Gênero</h5>
+                                <p 
+                                class="card-category"
+                                v-for="(genres) in movie.genres"
+                                :key="`${movie._id}_${genres}`"
+                                >
+                                  {{ genres }}
+                                </p>
+                              </div>
+                              <div>
+                                <h5 class="card-title">Diretores</h5>
+                                <p
+                                class="card-category"
+                                v-for="(directors) in movie.directors"
+                                :key="`${movie._id}_${directors}`"
+                                >
+                                  {{ directors }}
+                                </p>
+                              </div>
+                              <div>
+                                <h5 class="card-title">Autor(es)</h5>
+                                <p
+                                class="card-category"
+                                v-for="(writers) in movie.writers"
+                                :key="`${movie._id}_${writers}`"
+                                >
+                                  {{ writers }}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </card>
-            </li>
-          </ul>
+                </card>
+              </li>
+            </ul>
+          </div>
         </div>
       </card>
     </div>
@@ -38,38 +122,118 @@
 </template>
 
 <script>
+import FormUpdateMovie from '../components/FormUpdateMovie.vue'
+import OptionPopup from '../components/Popups/OptionPopup.vue'
 import ServiceMovies from '../services/axios-movies.request'
 
 export default {
   name: 'MoviesReports',
+  components: { OptionPopup, FormUpdateMovie },
   data() {
     return {
       movies: [],
+      movieToUpdate: {
+        plot: '',
+        genres: [],
+        runtime: 0,
+        cast: [],
+        title: '',
+        fullplot: '',
+        language: [],
+        released: '',
+        writers: [],
+        awards: {
+          wins: 0,
+          nominations: '',
+          text: '',
+        },
+        lastupdated: '',
+        year: 0,
+        imdb: {
+          rating: 0,
+          votes: 0,
+          id: 0
+        },
+        countries: [],
+        type: '',
+        tomatoes: {
+          viewer: {
+            rating: 0,
+            numReviewes: 0,
+          },
+          fresh: 0,
+          critic: {
+            rating: 0,
+            numReviewes: 0,
+            meter: 0,
+          },
+          rotten: 0,
+          lastUpdated: ''
+        }
+      },
       hiddenMovieDescription: false,
+      hiddenOptionModal: false,
+      hiddenFormUpdateMovie: false,
       id: 0,
     }
   },
   methods: {
+    
+    rollingMovieDescription(id) {
+      this.hiddenMovieDescription = !this.hiddenMovieDescription
+      this.id = id
+    },
+    
+    optionModal(id) {
+      this.hiddenOptionModal = !this.hiddenOptionModal
+      console.log(id)
+    },
+
+    closeOptions(id) {
+      console.log(id)
+    },
+
+    //requisições
     handleRequestMovies() {
       ServiceMovies.getMovies().then(res => {
         this.movies = res.data
       })
     },
 
-    rollingMovieDescription(id) {
-      this.hiddenMovieDescription = !this.hiddenMovieDescription
-      this.id = id
+    updateMovie(id) {
+      this.hiddenOptionModal = false
+      this.hiddenFormUpdateMovie = !this.hiddenFormUpdateMovie
+      console.log(id)  
+    },
+
+    deleteMovie(id) {
+      ServiceMovies.deleteMovie(id).then(res => {
+        if (res.status === 200) {
+          console.log(id)
+          this.handleRequestMovies()
+        }
+      })
+
+      this.hiddenOptionModal = false
     }
   },
   mounted() {
     this.handleRequestMovies()
-  }
+  },
+  /*computed: {
+    exibitionImage() {
+      return this.movies
+    }
+  }*/
 }  
 </script>
 
 <style>
 .header-table {
   margin: 0 0 15px;
+}
+.table-content {
+  padding-left: 30px;
 }
 .container-box ul {
   padding: 0 20px;
@@ -78,12 +242,40 @@ export default {
   padding: 20px 0;
 }
 .image-container {
-  width: 200px;
+  width: 20%;
+}
+
+.movie-commands {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-menu {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px;
+  box-shadow: -1px 1px 2px rgba(0, 0, 0, 0.200);
+  background-color: #80808068;
 }
 
 .image-container img {
   width: 100%;
   border-radius: 5px;
+}
+
+.image-empty {
+  background-color: #d7d7d7;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.image-empty svg {
+  color: #808080;
+  font-size: 30px;
 }
 
 .display-movie {
@@ -100,6 +292,7 @@ export default {
   box-shadow: 2px 2px 5px #80808080;
   animation: down .5s ease-in-out;
   padding: 20px;
+  margin-top: 20px;
 }
 
 @keyframes down {
@@ -107,7 +300,7 @@ export default {
     transform: translateY(-15px);
   }
   to {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 }
 
@@ -117,10 +310,81 @@ export default {
 
 .movie-descriptions p {
   color: gray;
+  margin-bottom: 10px;
 }
 
 .movie-descriptions h3 {
   margin: 0;
   font-size: 20px;
+}
+
+.movie-descriptions .info-movies {
+  display: flex;
+}
+
+.information-movie {
+  width: 80%;
+  padding-left: 30px;
+}
+
+.ratings {
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+}
+
+.ratings .type {
+  margin-right: 20px;
+  text-transform: capitalize;
+}
+
+#icon-meter {
+  font-size: 19px;
+  padding: 6px;
+  color: #fff;
+  background-color: red;
+  margin-left: 20px;
+}
+
+.ratings svg {
+  padding: 1px 3px;
+  font-size: 30px;
+  background-color: rgb(255, 213, 0);
+  border-radius: 3px;
+  border: none;
+  color: #000;
+}
+
+
+#rating-resize p {
+  display: flex;
+  align-items: center;
+  border: 1px solid #80808068;
+  border-radius: 3px;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.information-movie h5 {
+  margin: 0;
+}
+
+.information-movie p {
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.information-movie .information-movie-painel h5,
+.information-movie .information-movie-painel .list-items {
+  margin: 0;
+}
+
+.information-movie .information-movie-painel div {
+  padding-right: 50px;
+}
+
+.information-movie-painel {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
