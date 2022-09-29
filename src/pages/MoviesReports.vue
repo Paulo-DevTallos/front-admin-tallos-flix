@@ -26,14 +26,20 @@
                         </div>  
                       </div>
                       <option-popup 
-                        v-if="hiddenOptionModal"
+                        v-if="hiddenOptionModal && id === movie._id"
+                        @closeModal="closeOptions"
+                        @deleteMovie="deleteMovie(movie._id)"
+                        @updateMovie="updateMovie(movie._id)"
+                      />
+                      <form-update-movie 
+                        v-if="hiddenFormUpdateMovie"  
                       />
                       <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
                         <div class="info-movies">
-                          <div v-if="exibitionImage" class="image-empty image-container">
+                          <!--<div class="image-empty image-container">
                             <font-awesome-icon icon="fa-solid fa-image" />
-                          </div>
-                          <div v-else class="image-container">
+                          </div>-->
+                          <div class="image-container">
                             <img :src="movie.poster" alt="imagem do filme">
                           </div>
                           <div class="information-movie">
@@ -116,36 +122,99 @@
 </template>
 
 <script>
+import FormUpdateMovie from '../components/FormUpdateMovie.vue'
 import OptionPopup from '../components/Popups/OptionPopup.vue'
 import ServiceMovies from '../services/axios-movies.request'
 
 export default {
   name: 'MoviesReports',
-  components: { OptionPopup },
+  components: { OptionPopup, FormUpdateMovie },
   data() {
     return {
       movies: [],
+      movieToUpdate: {
+        plot: '',
+        genres: [],
+        runtime: 0,
+        cast: [],
+        title: '',
+        fullplot: '',
+        language: [],
+        released: '',
+        writers: [],
+        awards: {
+          wins: 0,
+          nominations: '',
+          text: '',
+        },
+        lastupdated: '',
+        year: 0,
+        imdb: {
+          rating: 0,
+          votes: 0,
+          id: 0
+        },
+        countries: [],
+        type: '',
+        tomatoes: {
+          viewer: {
+            rating: 0,
+            numReviewes: 0,
+          },
+          fresh: 0,
+          critic: {
+            rating: 0,
+            numReviewes: 0,
+            meter: 0,
+          },
+          rotten: 0,
+          lastUpdated: ''
+        }
+      },
       hiddenMovieDescription: false,
       hiddenOptionModal: false,
+      hiddenFormUpdateMovie: false,
       id: 0,
     }
   },
   methods: {
+    
+    rollingMovieDescription(id) {
+      this.hiddenMovieDescription = !this.hiddenMovieDescription
+      this.id = id
+    },
+    
+    optionModal(id) {
+      this.hiddenOptionModal = !this.hiddenOptionModal
+      console.log(id)
+    },
+
+    closeOptions(id) {
+      console.log(id)
+    },
+
+    //requisições
     handleRequestMovies() {
       ServiceMovies.getMovies().then(res => {
         this.movies = res.data
       })
     },
 
-    rollingMovieDescription(id) {
-      this.hiddenMovieDescription = !this.hiddenMovieDescription
-      this.id = id
+    updateMovie(id) {
+      this.hiddenOptionModal = false
+      this.hiddenFormUpdateMovie = !this.hiddenFormUpdateMovie
+      console.log(id)  
     },
 
-    optionModal(id) {
-      this.hiddenOptionModal = !this.hiddenOptionModal
+    deleteMovie(id) {
+      ServiceMovies.deleteMovie(id).then(res => {
+        if (res.status === 200) {
+          console.log(id)
+          this.handleRequestMovies()
+        }
+      })
 
-      console.log(id)
+      this.hiddenOptionModal = false
     }
   },
   mounted() {
