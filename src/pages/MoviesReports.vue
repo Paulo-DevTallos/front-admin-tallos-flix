@@ -25,7 +25,9 @@
                           <font-awesome-icon icon="fa-solid fa-bars" />
                         </div>  
                       </div>
-                      <option-popup />
+                      <option-popup 
+                        v-if="hiddenOptionModal"
+                      />
                       <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
                         <div class="info-movies">
                           <div v-if="exibitionImage" class="image-empty image-container">
@@ -124,6 +126,7 @@ export default {
     return {
       movies: [],
       hiddenMovieDescription: false,
+      hiddenOptionModal: false,
       id: 0,
     }
   },
@@ -140,6 +143,8 @@ export default {
     },
 
     optionModal(id) {
+      this.hiddenOptionModal = !this.hiddenOptionModal
+
       console.log(id)
     }
   },
