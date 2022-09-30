@@ -182,9 +182,7 @@ export default {
   },
   data () {
     return {
-      users: [],
-      movies: [],
-      comments: [],
+      storeJwt: localStorage.getItem('token'),
       editTooltip: 'Edit Task',
       deleteTooltip: 'Remove',
       pieChart: {
@@ -272,21 +270,22 @@ export default {
 
   methods: {
     renderUsers() {
-      this.$store.dispatch('handleUsersRequest', this.users)
+      this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
     },
-    renderMovies() {
-      this.$store.dispatch('handleMoviesRequest', this.movies)
-    },
+
     renderComments() {
-      this.$store.dispatch('handleCommentsRequest', this.comments)
-      console.log(this.comments)
-    }
+      this.$store.dispatch('handleCommentsRequest', `Bearer ${this.storeJwt}`)
+    },
+
+    renderMovies() {
+      this.$store.dispatch('handleMoviesRequest', `Bearer ${this.storeJwt}`)
+    },
   },
 
   mounted() {
     this.renderUsers()
-    this.renderMovies()
     this.renderComments()
+    this.renderMovies()
   }
 }
 </script>
