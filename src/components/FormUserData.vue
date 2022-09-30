@@ -6,7 +6,7 @@
     <div class="icon-add-user"> 
       <font-awesome-icon icon="fa-solid fa-user-plus" />
     </div>
-    <form>
+    <form @sumbit.prevent="$emit('submitNewUser', user)">
       <label for="name">Nome</label>
       <base-input 
         id="name"
@@ -25,7 +25,7 @@
         type="password"
         placeholder="Digite sua senha"
       />
-      <button class="btn btn-style btn-primary">Cadastrar</button>
+      <button type="submit" class="btn btn-style btn-primary">Cadastrar</button>
     </form>
   </div>
 </template>
@@ -34,7 +34,17 @@
 import BaseInput from './Inputs/BaseInput.vue'
 export default {
   components: { BaseInput },
-  name: 'FormUserData'
+  name: 'FormUserData',
+  emits: ['closeFormUser', 'submitNewUser'],
+  data() {
+    return {
+      user: {
+        name: '',
+        email: '',
+        passwrod: '',
+      }
+    }
+  }
 }  
 </script>
 
