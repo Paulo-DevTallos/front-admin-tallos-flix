@@ -4,6 +4,11 @@
       v-model="name"
       placeholder="Encontre um usuário"
     />
+    <button>Pesquisa</button>
+    <button>
+      Adicionar novo usuário
+      <font-awesome-icon icon="fa-solid fa-plus" />
+    </button>
   </div>
 </template>
 
