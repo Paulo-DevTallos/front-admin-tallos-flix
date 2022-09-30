@@ -77,21 +77,5 @@ export default new vuex.Store({
         context.commit('getAllMovies', JSON.parse(JSON.stringify(res.data)))
       })
     }
-
-    /*handleMoviesRequest(context, movies) {
-      ServiceMovies.getMovies().then(res => {
-        console.log(movies)
-
-        context.commit('getAllMovies', res.data)
-      })
-    },
-
-    handleCommentsRequest(context, comments) {
-      ServiveComments.getComments().then(res => {
-        console.log(comments)
-
-        context.commit('getAllComments', res.data)
-      })
-    }*/
   }
 })
