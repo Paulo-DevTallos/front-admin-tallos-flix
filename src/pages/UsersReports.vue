@@ -25,7 +25,7 @@
               <div id="users-table-rows">
                 <div class="users-table-row" v-for="user in users" :key="user._id">
                   <div>{{ user.name }}</div>
-                  <div>{{ user.email }}</div> 
+                  <div>{{ user.email }}</div>
                   <!-- action buttons -->
                   <div id="items-alignment"> 
                     <div @click="showChooseModal(user._id)" id="actions-op">
@@ -37,9 +37,9 @@
                   </div> 
                   <choose-popup 
                     :data="user.name"
-                    v-if="hiddenChooseModal && id === user._id"
+                    v-if="hiddenOptionsModal && id === user._id"
                     @removeUser="deleteUser(user._id)"
-                    @closeModal="hiddenModal"
+                    @closeModal="hiddenChooseModal"
                   />
                 </div>
               </div>
@@ -83,7 +83,8 @@ export default {
     return {
       users: [],
       userToUpdate: { name: '', email: '' },
-      hiddenChooseModal: false,
+      hiddenOptionsModal: false,
+      storeToken: localStorage.getItem('token'),
       callUpdateForm: false,
       hiddenFormUser: false,
       id: 0,
@@ -91,75 +92,79 @@ export default {
     }
   },
   methods: {
+    //list request
     listUsers() {
-      Service.listar().then(res => {
+      Service.listar({ headers: { Authorization: `Bearer ${this.storeToken}` }}).then(res => {
         const dataParse = JSON.parse(JSON.stringify(res.data))
+        console.log(dataParse)
         this.users = dataParse
       })
     },
-    
-    showChooseModal(id) {
-      this.hiddenChooseModal = !this.hiddenChooseModal
-      this.id = id
-    },
 
-    openForm() {
-      this.hiddenFormUser = !this.hiddenFormUser
-    },
-    
-    closeFormUser() {
-      this.hiddenFormUser = false
-    },
-
-    hiddenModal() {
-      this.hiddenChooseModal = false
-    },
-
-    closeUpdateModal() {
-      this.closeUpdateModal = false
-    },
-
-    editUser(id, user) {
-      this.callUpdateForm = !this.callUpdateForm
-      this.userToUpdate.name = user.name
-      this.userToUpdate.email = user.email
-
-      this.update_id = id
-    },
-
+    //create request
     handleSubmitNewUser(user) {
       Service.create(user).then(res => {
         if (res.status === 201) {
           this.listUsers()
         }
-        console.log(res.status)
       })
-      this.callFormUser = false
+      this.hiddenFormUser = false
     },
 
+    //update request
     updateUser(user) {
       const id = this.update_id
       const parseUser = JSON.parse(JSON.stringify(user))
 
-      Service.update(id, parseUser).then(res => {
+      Service.update({ headers: { Authorization: `Bearer ${this.storeToken}` }}, id, parseUser).then(res => {
         if (res.status === 200) {
           this.listUsers()  
         }
       })
-
       this.callUpdateForm = false
     },
 
+    //delete request
     deleteUser(id) {
-      Service.remove(id).then(res => {
+      Service.remove({ headers: { Authorization: `Bearer ${this.storeToken}` }}, id).then(res => {
         if (res.status === 200) {
           this.listUsers()
         }
       })
-    }
+    },
+    
+    openForm() {
+      this.hiddenFormUser = !this.hiddenFormUser
+    },
+
+    showChooseModal(id) {
+      this.hiddenOptionsModal = !this.hiddenOptionsModal
+      this.id = id
+    },
+
+    hiddenChooseModal() {
+      this.hiddenOptionsModal = false
+    },
+    
+    editUser(id, user) {
+      this.callUpdateForm = !this.callUpdateForm
+      this.userToUpdate.name = user.name
+      this.userToUpdate.email = user.email
+      
+      this.update_id = id
+    },
+
+    closeFormUser() {
+      this.hiddenFormUser = false
+    },
+
+    closeUpdateModal() {
+      this.closeUpdateModal = false
+    },
   },
   mounted() {
     this.listUsers()
+    //this.handleUserRequest()
   }
 }
 </script>
