@@ -14,17 +14,19 @@ export default {
   data() {
     return {
       comments: [],
+      storeJwt: localStorage.getItem('token'),
     }
   },
   methods: {
-    handleRequestComments() {
-      ServiceComments.getComments().then(res => {
-        this.comments = res.data
+    listComments() {
+      ServiceComments.getComments({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
+        const parseComments = JSON.parse(JSON.stringify(res.data))
+        return this.comments = parseComments
       })
     }
   },
   mounted() {
-    this.handleRequestComments()
+    this.listComments()
   }
 }  
 </script>

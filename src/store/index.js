@@ -25,15 +25,18 @@ export default new vuex.Store({
     
     getAllUsers(state, payload) {
       state.users = payload
-    },
-
-    getAllMovies(state, payload) {
-      state.movies = payload
+      state.token = localStorage.getItem('token')
     },
 
     getAllComments(state, payload) {
       state.comments = payload
-    }
+      state.token = localStorage.getItem('token')
+    },
+    
+    getAllMovies(state, payload) {
+      state.movies = payload
+      state.token = localStorage.getItem('token')
+    },
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -54,26 +57,24 @@ export default new vuex.Store({
       })
     },
 
-    handleUsersRequest(context, users) {
-      Service.listar().then(res => {
-        console.log(users)
-        context.commit('getAllUsers', res.data)
+    //get de usuarios
+    handleUsersRequest(context, token) {
+      Service.listar({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllUsers', JSON.parse(JSON.stringify(res.data)))
       })
     },
 
-    handleMoviesRequest(context, movies) {
-      ServiceMovies.getMovies().then(res => {
-        console.log(movies)
-
-        context.commit('getAllMovies', res.data)
+    //get de comments
+    handleCommentsRequest(context, token) {
+      ServiveComments.getComments({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllComments', JSON.parse(JSON.stringify(res.data)))
       })
     },
 
-    handleCommentsRequest(context, comments) {
-      ServiveComments.getComments().then(res => {
-        console.log(comments)
-
-        context.commit('getAllComments', res.data)
+    //get de movies
+    handleMoviesRequest(context, token) {
+      ServiceMovies.getMovies({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllMovies', JSON.parse(JSON.stringify(res.data)))
       })
     }
   }

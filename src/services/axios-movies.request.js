@@ -1,11 +1,11 @@
 import { http } from "./http"
 
 export default {
-  getMovies: () => {
-    return http.get('/movies')
+  getMovies: (token) => {
+    return http.get('/movies', token)
   },
 
-  deleteMovie: (id) => {
-    return http.delete(`/movies/${id}`)
+  deleteMovie: (token, id) => {
+    return http.delete(`/movies/${id}`, token)
   },
 }

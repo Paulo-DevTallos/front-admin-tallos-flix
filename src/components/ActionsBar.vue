@@ -1,11 +1,16 @@
 <template>
   <div class="content">
-    <base-input   
-      v-model="name"
-      class="input-lg"
-      placeholder="Encontre um usuário"
-    />
-    <button class="btn btn-style btn-primary">Pesquisa</button>
+    <form @submit.prevent="$emit('searchUser', user.email)" class="form-align">
+      <base-input   
+        v-model="user.email"
+        class="input-lg"
+        placeholder="Encontre um usuário por e-mail"
+      />
+      <div @click="$emit('reloadList')" v-if="reloadList" class="reload-list">
+        <font-awesome-icon icon="fa-solid fa-rotate-right" />
+      </div>
+      <button type="submit" class="btn btn-style btn-primary">Pesquisa</button>
+    </form>
     <button @click="$emit('openFormUserData')" class="btn btn-style btn-primary">
       Adicionar novo usuário
       <font-awesome-icon icon="fa-solid fa-plus" />
@@ -18,10 +23,19 @@ import BaseInput from './Inputs/BaseInput.vue'
 export default {
   components: { BaseInput },
   name: 'ActionsBar',
-  emits: ['openFormUserData'],
+  emits: ['searchUser', 'reloadList', 'openFormUserData'],
   data() {
     return {
-      name: ''
+      user: {
+        email: '',
+      }
+    }
+  },
+
+  computed: {
+    reloadList() {
+      if (this.user.email !== '') return true
+      else return false
     }
   }
 }  
@@ -36,6 +50,26 @@ export default {
 
 .input-lg {
   width: 400px;
+}
+
+.form-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.reload-list {
+  margin-right: 25px;
+  background-color: #808080;
+  padding: 7px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 0 3px #80808068;
+}
+
+.reload-list svg {
+  font-size: 25px;
+  color: #fff;
 }
 
 .btn-style {
