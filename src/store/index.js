@@ -31,10 +31,12 @@ export default new vuex.Store({
     getAllComments(state, payload) {
       state.comments = payload
       state.token = localStorage.getItem('token')
-    }
-    /*getAllMovies(state, payload) {
+    },
+    
+    getAllMovies(state, payload) {
       state.movies = payload
-    },*/
+      state.token = localStorage.getItem('token')
+    },
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -68,11 +70,13 @@ export default new vuex.Store({
         context.commit('getAllComments', JSON.parse(JSON.stringify(res.data)))
       })
     },
-    /*handleCommentsRequest(context, token) {
-      ServiveComments.getComments({ headers: { Authorization: `Bearer ${token}` }}).then(res => {
-        context.commit('getAllComments', JSON.parse(JSON.stringify(res.data))
+
+    //get de movies
+    handleMoviesRequest(context, token) {
+      ServiceMovies.getMovies({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllMovies', JSON.parse(JSON.stringify(res.data)))
       })
-    },*/
+    }
 
     /*handleMoviesRequest(context, movies) {
       ServiceMovies.getMovies().then(res => {
