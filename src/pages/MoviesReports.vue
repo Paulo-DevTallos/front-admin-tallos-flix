@@ -174,10 +174,18 @@ export default {
       hiddenMovieDescription: false,
       hiddenOptionModal: false,
       hiddenFormUpdateMovie: false,
+      storeJwt: localStorage.getItem('token'),
       id: 0,
     }
   },
   methods: {
+    //get movies
+    listAllMovies() {
+      ServiceMovies.getMovies({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
+        this.movies = res.data
+      })
+    },
+
     
     rollingMovieDescription(id) {
       this.hiddenMovieDescription = !this.hiddenMovieDescription
@@ -191,13 +199,6 @@ export default {
 
     closeOptions(id) {
       console.log(id)
-    },
-
-    //requisições
-    handleRequestMovies() {
-      ServiceMovies.getMovies().then(res => {
-        this.movies = res.data
-      })
     },
 
     updateMovie(id) {
@@ -218,7 +219,7 @@ export default {
     }
   },
   mounted() {
-    this.handleRequestMovies()
+    this.listAllMovies()
   },
   /*computed: {
     exibitionImage() {
