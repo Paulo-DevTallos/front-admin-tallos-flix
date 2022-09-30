@@ -48,6 +48,7 @@
               @updateUser="updateUser"
               @closeUpdateModal="closeUpdateModal"
             />
+            <form-user-data />
           </card>
         </div>
       </div>
@@ -62,13 +63,15 @@ import Service from '../services/axios-users.requests'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import FormUpdate from '../components/FormUpdate.vue'
 import ActionsBar from '../components/ActionsBar.vue'
+import FormUserData from '../components/FormUserData.vue'
 export default {
   components: {
     LTable,
     Card,
     ChoosePopup,
     FormUpdate,
-    ActionsBar
+    ActionsBar,
+    FormUserData
 },
   data () {
     return {
