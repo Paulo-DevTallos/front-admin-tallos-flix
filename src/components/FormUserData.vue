@@ -11,18 +11,21 @@
       <base-input 
         id="name"
         type="text"
+        v-model="user.name"
         placeholder="Digite um nome de usuário"
       />
       <label for="email">E-mail</label>
       <base-input 
         id="email"
         type="text"
+        v-model="user.email"
         placeholder="Digite um e-mail válido"
       />
       <label for="password">Senha</label>
       <base-input 
         id="password"
         type="password"
+        v-model="user.password"
         placeholder="Digite sua senha"
       />
       <button type="submit" class="btn btn-style btn-primary">Cadastrar</button>
