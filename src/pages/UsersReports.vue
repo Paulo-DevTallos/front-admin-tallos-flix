@@ -12,7 +12,9 @@
               <p class="card-category">Usuários disponíveis na plataforma</p>
             </template>
             <template>
-              <actions-bar />
+              <actions-bar 
+                @openFormUserData="openForm"
+              />
             </template>
             <div class="table-content">
               <div id="users-table-header">
@@ -48,6 +50,11 @@
               @updateUser="updateUser"
               @closeUpdateModal="closeUpdateModal"
             />
+            <form-user-data 
+              v-if="hiddenFormUser"
+              @closeFormUser="closeFormUser"
+              @submitNewUser="handleSubmitNewUser"
+            />
           </card>
         </div>
       </div>
@@ -62,13 +69,15 @@ import Service from '../services/axios-users.requests'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import FormUpdate from '../components/FormUpdate.vue'
 import ActionsBar from '../components/ActionsBar.vue'
+import FormUserData from '../components/FormUserData.vue'
 export default {
   components: {
     LTable,
     Card,
     ChoosePopup,
     FormUpdate,
-    ActionsBar
+    ActionsBar,
+    FormUserData
 },
   data () {
     return {
@@ -76,6 +85,7 @@ export default {
       userToUpdate: { name: '', email: '' },
       hiddenChooseModal: false,
       callUpdateForm: false,
+      hiddenFormUser: false,
       id: 0,
       update_id: null
     }
@@ -92,7 +102,15 @@ export default {
       this.hiddenChooseModal = !this.hiddenChooseModal
       this.id = id
     },
+
+    openForm() {
+      this.hiddenFormUser = !this.hiddenFormUser
+    },
     
+    closeFormUser() {
+      this.hiddenFormUser = false
+    },
+
     hiddenModal() {
       this.hiddenChooseModal = false
     },
@@ -107,6 +125,16 @@ export default {
       this.userToUpdate.email = user.email
 
       this.update_id = id
+    },
+
+    handleSubmitNewUser(user) {
+      Service.create(user).then(res => {
+        if (res.status === 201) {
+          this.listUsers()
+        }
+        console.log(res.status)
+      })
+      this.callFormUser = false
     },
 
     updateUser(user) {

@@ -5,6 +5,10 @@ export default {
     return http.get('/users')
   },
 
+  create: (data) => {
+    return http.post('/users', data)
+  },
+
   update: (id, data) => {
     return http.patch(`/users/${id}`, data)
   },
