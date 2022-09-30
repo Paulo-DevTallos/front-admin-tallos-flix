@@ -182,7 +182,10 @@ export default {
     //get movies
     listAllMovies() {
       ServiceMovies.getMovies({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
-        this.movies = res.data
+        const parseMovies = JSON.parse(JSON.stringify(res.data))
+
+        console.log(parseMovies)
+        return this.movies = parseMovies
       })
     },
 
