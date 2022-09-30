@@ -10,7 +10,7 @@
       <div class="logo">
         <a href="/#/admin/overview" class="simple-text logo__container">
           <div class="logo-img">
-              <img src="img/TallosFlix.png" alt="Logo Tallosflix">
+              <img src="img/tallos-flix-oficial.png" alt="Logo Tallosflix">
           </div>
         </a>
       </div>
