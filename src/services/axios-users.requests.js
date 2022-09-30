@@ -5,6 +5,10 @@ export default {
     return http.get('/users', token)
   },
 
+  findByEmail: (token, email) => {
+    return http.get(`/users/search/${email}`, token)
+  },
+
   create: (token, data) => {
     return http.post('/users', token, data)
   },
