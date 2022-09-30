@@ -14,6 +14,7 @@
             <template>
               <actions-bar 
               @searchUser="findUserByEmail"
+              @reloadList="reloadAllUsers"
               @openFormUserData="openForm"
               />
             </template>
@@ -113,7 +114,6 @@ export default {
 
     //getuser
     findUserByEmail(email) {
-      console.log(email)
       Service.findByEmail({ headers: { Authorization: `Bearer ${this.storeToken}`}}, email)
       .then(res => {
         return this.users = res.data
@@ -140,6 +140,10 @@ export default {
           this.listUsers()
         }
       })
+    },
+
+    reloadAllUsers() {
+      this.listUsers()
     },
     
     openForm() {
