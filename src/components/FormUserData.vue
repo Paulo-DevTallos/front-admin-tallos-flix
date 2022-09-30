@@ -6,27 +6,27 @@
     <div class="icon-add-user"> 
       <font-awesome-icon icon="fa-solid fa-user-plus" />
     </div>
-    <form @sumbit.prevent="$emit('submitNewUser', user)">
+    <form @submit.prevent="$emit('submitNewUser', user)">
       <label for="name">Nome</label>
       <base-input 
         id="name"
         type="text"
-        v-model="user.name"
         placeholder="Digite um nome de usuário"
+        v-model="user.name"
       />
       <label for="email">E-mail</label>
       <base-input 
         id="email"
         type="text"
-        v-model="user.email"
         placeholder="Digite um e-mail válido"
+        v-model="user.email"
       />
       <label for="password">Senha</label>
       <base-input 
         id="password"
         type="password"
-        v-model="user.password"
         placeholder="Digite sua senha"
+        v-model="user.password"
       />
       <button type="submit" class="btn btn-style btn-primary">Cadastrar</button>
     </form>
@@ -44,10 +44,10 @@ export default {
       user: {
         name: '',
         email: '',
-        passwrod: '',
+        password: '',
       }
     }
-  }
+  },
 }  
 </script>
 
