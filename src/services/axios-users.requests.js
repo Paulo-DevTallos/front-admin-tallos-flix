@@ -1,23 +1,23 @@
 import { http } from './http'
 
 export default {
-  listar: () => {
-    return http.get('/users')
+  listar: (token) => {
+    return http.get('/users', token)
   },
 
-  create: (data) => {
-    return http.post('/users', data)
+  create: (token, data) => {
+    return http.post('/users', token, data)
   },
 
-  update: (id, data) => {
-    return http.patch(`/users/${id}`, data)
+  update: (token, id, data) => {
+    return http.patch(`/users/${id}`, data, token)
   },
 
   login: (data) => {
     return http.post('/login', data)
   },
 
-  remove: (id) => {
-    return http.delete(`/users/${id}`)
+  remove: (token, id) => {
+    return http.delete(`/users/${id}`, token)
   }
 }
