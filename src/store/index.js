@@ -67,6 +67,7 @@ export default new vuex.Store({
     //get de comments
     handleCommentsRequest(context, token) {
       ServiveComments.getComments({ headers: { Authorization: token }}).then(res => {
+        console.log(token)
         context.commit('getAllComments', JSON.parse(JSON.stringify(res.data)))
       })
     },

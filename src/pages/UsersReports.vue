@@ -177,7 +177,6 @@ export default {
   },
   mounted() {
     this.listUsers()
-    //this.handleUserRequest()
   }
 }
 </script>
