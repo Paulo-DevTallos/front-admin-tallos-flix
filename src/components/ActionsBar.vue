@@ -1,11 +1,13 @@
 <template>
   <div class="content">
-    <base-input   
-      v-model="name"
-      class="input-lg"
-      placeholder="Encontre um usuário"
-    />
-    <button class="btn btn-style btn-primary">Pesquisa</button>
+    <form @submit.prevent="$emit('searchUser', user.email)" class="form-align">
+      <base-input   
+        v-model="user.email"
+        class="input-lg"
+        placeholder="Encontre um usuário por e-mail"
+      />
+      <button type="submit" class="btn btn-style btn-primary">Pesquisa</button>
+    </form>
     <button @click="$emit('openFormUserData')" class="btn btn-style btn-primary">
       Adicionar novo usuário
       <font-awesome-icon icon="fa-solid fa-plus" />
@@ -18,10 +20,12 @@ import BaseInput from './Inputs/BaseInput.vue'
 export default {
   components: { BaseInput },
   name: 'ActionsBar',
-  emits: ['openFormUserData'],
+  emits: ['searchUser','openFormUserData'],
   data() {
     return {
-      name: ''
+      user: {
+        email: '',
+      }
     }
   }
 }  
@@ -36,6 +40,12 @@ export default {
 
 .input-lg {
   width: 400px;
+}
+
+.form-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn-style {
