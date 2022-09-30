@@ -13,7 +13,8 @@
             </template>
             <template>
               <actions-bar 
-                @openFormUserData="openForm"
+              @searchUser="findUserByEmail"
+              @openFormUserData="openForm"
               />
             </template>
             <div class="table-content">
@@ -96,7 +97,6 @@ export default {
     listUsers() {
       Service.listar({ headers: { Authorization: `Bearer ${this.storeToken}` }}).then(res => {
         const dataParse = JSON.parse(JSON.stringify(res.data))
-        console.log(dataParse)
         this.users = dataParse
       })
     },
@@ -109,6 +109,15 @@ export default {
         }
       })
       this.hiddenFormUser = false
+    },
+
+    //getuser
+    findUserByEmail(email) {
+      console.log(email)
+      Service.findByEmail({ headers: { Authorization: `Bearer ${this.storeToken}`}}, email)
+      .then(res => {
+        return this.users = res.data
+      })
     },
 
     //update request
