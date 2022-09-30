@@ -23,18 +23,18 @@ export default new vuex.Store({
       state.token = payload.access_token
     },
     
-    /*getAllUsers(state, payload) {
+    getAllUsers(state, payload) {
       state.users = payload
       state.token = localStorage.getItem('token')
     },
 
-    getAllMovies(state, payload) {
-      state.movies = payload
-    },
-
     getAllComments(state, payload) {
       state.comments = payload
-    }*/
+      state.token = localStorage.getItem('token')
+    }
+    /*getAllMovies(state, payload) {
+      state.movies = payload
+    },*/
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -55,12 +55,22 @@ export default new vuex.Store({
       })
     },
 
-    /*handleUsersRequest(context, token) {
-      console.log(token)
+    //get de usuarios
+    handleUsersRequest(context, token) {
       Service.listar({ headers: { Authorization: token }}).then(res => {
-
-        console.log(res.data)
         context.commit('getAllUsers', JSON.parse(JSON.stringify(res.data)))
+      })
+    },
+
+    //get de comments
+    handleCommentsRequest(context, token) {
+      ServiveComments.getComments({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllComments', JSON.parse(JSON.stringify(res.data)))
+      })
+    },
+    /*handleCommentsRequest(context, token) {
+      ServiveComments.getComments({ headers: { Authorization: `Bearer ${token}` }}).then(res => {
+        context.commit('getAllComments', JSON.parse(JSON.stringify(res.data))
       })
     },*/
 
