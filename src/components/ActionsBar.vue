@@ -6,6 +6,9 @@
         class="input-lg"
         placeholder="Encontre um usuário por e-mail"
       />
+      <div @click="$emit('reloadList')" v-if="reloadList" class="reload-list">
+        <font-awesome-icon icon="fa-solid fa-rotate-right" />
+      </div>
       <button type="submit" class="btn btn-style btn-primary">Pesquisa</button>
     </form>
     <button @click="$emit('openFormUserData')" class="btn btn-style btn-primary">
@@ -20,12 +23,19 @@ import BaseInput from './Inputs/BaseInput.vue'
 export default {
   components: { BaseInput },
   name: 'ActionsBar',
-  emits: ['searchUser','openFormUserData'],
+  emits: ['searchUser', 'reloadList', 'openFormUserData'],
   data() {
     return {
       user: {
         email: '',
       }
+    }
+  },
+
+  computed: {
+    reloadList() {
+      if (this.user.email !== '') return true
+      else return false
     }
   }
 }  
@@ -46,6 +56,20 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.reload-list {
+  margin-right: 25px;
+  background-color: #808080;
+  padding: 7px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 0 3px #80808068;
+}
+
+.reload-list svg {
+  font-size: 25px;
+  color: #fff;
 }
 
 .btn-style {
