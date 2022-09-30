@@ -6,7 +6,7 @@
       placeholder="Encontre um usuário"
     />
     <button class="btn btn-style btn-primary">Pesquisa</button>
-    <button class="btn btn-style btn-primary">
+    <button @click="$emit('openFormUserData')" class="btn btn-style btn-primary">
       Adicionar novo usuário
       <font-awesome-icon icon="fa-solid fa-plus" />
     </button>
@@ -18,6 +18,7 @@ import BaseInput from './Inputs/BaseInput.vue'
 export default {
   components: { BaseInput },
   name: 'ActionsBar',
+  emits: ['openFormUserData'],
   data() {
     return {
       name: ''
