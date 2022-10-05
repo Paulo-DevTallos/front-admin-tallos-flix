@@ -3,37 +3,31 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-xl-3 col-md-6">
-          <stats-card>
-            <div slot="header" class="icon-warning">
+          <stats-card class="spacing-container">
+            <div slot="header" class="icon-warning position-icon">
               <i class="nc-icon nc-single-02 text-warning"></i>
             </div>
             <div slot="content">
               <p class="card-category">Usuários na plataforma</p>
               <h4 class="card-title">{{ $store.state.users.length }}</h4>
             </div>
-            <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
-            </div>
           </stats-card>
         </div>
 
         <div class="col-xl-3 col-md-6">
-          <stats-card>
+          <stats-card class="spacing-container">
             <div slot="header" class="icon-success">
-              <i class="nc-icon nc-tv-2 text-success"></i>
+              <i class="nc-icon nc-button-play text-success"></i>
             </div>
             <div slot="content">
               <p class="card-category">Filmes disponíveis</p>
               <h4 class="card-title">{{ $store.state.movies.length }}</h4>
             </div>
-            <div slot="footer">
-              <i class="fa fa-calendar-o"></i>Last day
-            </div>
           </stats-card>
         </div>
 
         <div class="col-xl-3 col-md-6">
-          <stats-card>
+          <stats-card class="spacing-container">
             <div slot="header" class="icon-danger">
               <i class="nc-icon nc-quote text-danger"></i>
             </div>
@@ -41,23 +35,17 @@
               <p class="card-category">Comentários dos filmes</p>
               <h4 class="card-title">{{ $store.state.comments.length }}</h4>
             </div>
-            <div slot="footer">
-              <i class="fa fa-clock-o"></i>Last day
-            </div>
           </stats-card>
         </div>
 
         <div class="col-xl-3 col-md-6">
-          <stats-card>
+          <stats-card class="spacing-container">
             <div slot="header" class="icon-info">
-              <i class="nc-icon nc-favourite-28 text-primary"></i>
+              <i class="nc-icon nc-icon nc-tv-2 text-primary"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Followers</p>
-              <h4 class="card-title">+45</h4>
-            </div>
-            <div slot="footer">
-              <i class="fa fa-refresh"></i>Updated now
+              <p class="card-category">Cinemas catalogados</p>
+              <h4 class="card-title">{{ $store.state.theaters.length }}</h4>
             </div>
           </stats-card>
         </div>
@@ -65,23 +53,14 @@
       </div>
       <div class="row">
         <div class="col-md-8">
-          <chart-card :chart-data="lineChart.data"
-                      :chart-options="lineChart.options"
-                      :responsive-options="lineChart.responsiveOptions">
+          <chart-card 
+            :chart-data="lineChart.data"
+            :chart-options="lineChart.options"
+            :responsive-options="lineChart.responsiveOptions"
+          >
             <template slot="header">
               <h4 class="card-title">Users Behavior</h4>
               <p class="card-category">24 Hours performance</p>
-            </template>
-            <template slot="footer">
-              <div class="legend">
-                <i class="fa fa-circle text-info"></i> Open
-                <i class="fa fa-circle text-danger"></i> Click
-                <i class="fa fa-circle text-warning"></i> Click Second Time
-              </div>
-              <hr>
-              <div class="stats">
-                <i class="fa fa-history"></i> Updated 3 minutes ago
-              </div>
             </template>
           </chart-card>
         </div>
@@ -280,15 +259,27 @@ export default {
     renderMovies() {
       this.$store.dispatch('handleMoviesRequest', `Bearer ${this.storeJwt}`)
     },
+
+    renderTheaters() {
+      this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
+    }
   },
 
   mounted() {
     this.renderUsers()
     this.renderComments()
     this.renderMovies()
+    this.renderTheaters()
   }
 }
 </script>
-<style>
-
+<style scoped>
+.position-icon svg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.spacing-container {
+  padding-bottom: 20px;
+}
 </style>

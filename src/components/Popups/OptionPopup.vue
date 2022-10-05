@@ -1,12 +1,12 @@
 <template>
   <div class="content card option-content">
-    <div @click="$emit(closeModal)">
+    <div @click="$emit('closeModal')">
       <font-awesome-icon icon="fa-solid fa-xmark" />
     </div>
     Escolha uma ação para realizar
     <div class="container-btn">
-      <button class="btn btn-primary btn-update" @click="$emit('updateMovie')">Atualizar</button>
       <button class="btn btn-danger btn-delete" @click="$emit('deleteMovie')">Excluir Filme</button>
+      <button class="btn btn-primary btn-update" @click="$emit('updateMovie')">Atualizar</button>
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 1000;
+  z-index: 2000;
   transform: translate(-50%, -50%);
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.100);
   padding: 30px;

@@ -1,8 +1,8 @@
 <template>
   <div class="card-modal">
-    Tem certeza que deseja excluir o usuário {{ data }}?
+    {{ message }}  {{ data }}?
     <div class="btn-size-container">
-      <button @click="$emit('removeUser')">Excluir</button>
+      <button @click="$emit('removeResource')">Excluir</button>
       <button @click="$emit('closeModal')">Cancelar</button>
     </div>
   </div>
@@ -12,15 +12,17 @@
 export default {
   name: 'ChoosePopup',
   props: {
-    data: String
+    data: String,
+    message: String,
   },
-  emits: ['removeUser', 'closeModal']
+  emits: ['removeResource', 'closeModal']
 }
 </script>
 
 <style scoped>
 .card-modal {
   position: fixed;
+  width: 400px;
   top: 50%;  
   left: 50%;
   padding: 20px;

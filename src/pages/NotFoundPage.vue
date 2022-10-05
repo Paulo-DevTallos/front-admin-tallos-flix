@@ -1,66 +1,56 @@
 <template>
-  <div class="contact-us full-screen">
-    <nav class="navbar navbar-ct-default" role="navigation-demo">
-      <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <router-link :to="{path:'/'}" class="navbar-brand">Site title</router-link>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navigation-example-2">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <router-link :to="{path:'/'}">Home</router-link>
-            </li>
-          </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <div class="contact-us full-screen main-container">
+    <div class="content align-content">
+      <div class="image-container">
+        <img src="/img/not-found-page.png" alt="imagem de pagina nao encontrada">
       </div>
-      <!-- /.container-->
-    </nav>
-    <div class="wrapper wrapper-full-page section content">
-      <div class="">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
-              <h2 class="title text-danger">404 Not Found</h2>
-              <h2 class="title">Oops! It seems that this page does not exist.</h2>
-            </div>
-          </div>
-        </div>
+      <div class="description">
+        <p>Desculpa, não encontramos o que você procura! <span>Sugerimos que retorne para a sessão de login da plataforma.</span></p>
+        <router-link class="btn btn-primary spacing" to="/login">Login</router-link>
       </div>
     </div>
-    <footer class="footer-demo">
-      <div class="container">
-        <nav class="pull-left">
-          <ul>
-            <li>
-              <router-link :to="{path:'/'}">Home</router-link>
-            </li>
-            <li>
-              <router-link :to="{path:'/register'}">Register</router-link>
-            </li>
-          </ul>
-        </nav>
-        <div class="copyright text-center">
-          &copy; Coded with
-          <i class="fa fa-heart heart"></i> by
-          <a href="https://binarcode.com" target="_blank">BinarCode</a>.
-          Designed by <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank">Creative Tim</a>.
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
 
 <script>
-  export default {}
-
+export default {
+  name: 'NotFoundPage'
+}
 </script>
+
+<style scoped>
+.main-container, .align-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-container {
+  height: 100vh;
+}
+
+.align-content {
+  flex-direction: column;
+}
+
+.image-container {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.image-container img {
+  width: 450px;
+}
+
+.image-container, .description {
+  text-align: center;
+}
+
+.description span {
+  display: block;
+}
+
+.description .spacing {
+  margin: 30px 0;
+}
+</style>

@@ -12,10 +12,11 @@
               <p class="card-category">Usuários disponíveis na plataforma</p>
             </template>
             <template>
-              <actions-bar 
-              @searchUser="findUserByEmail"
-              @reloadList="reloadAllUsers"
-              @openFormUserData="openForm"
+              <actions-bar
+                :title="buttonActionBarName" 
+                @searchData="findUserByEmail"
+                @reloadList="reloadAllUsers"
+                @openFormData="openForm"
               />
             </template>
             <div class="table-content">
@@ -38,11 +39,19 @@
                     </div>
                   </div> 
                   <choose-popup 
+                    :message="message"
                     :data="user.name"
                     v-if="hiddenOptionsModal && id === user._id"
-                    @removeUser="deleteUser(user._id)"
+                    @removeResource="deleteUser(user._id)"
                     @closeModal="hiddenChooseModal"
                   />
+                </div>
+                <div class="card-footer pb-0 pt-3">
+                  <jw-pagination 
+                    :pageSize="10" 
+                    :items="this.$store.state.users" 
+                    @changePage="onChangePage"
+                  ></jw-pagination>
                 </div>
               </div>
             </div>
@@ -57,7 +66,7 @@
               @closeFormUser="closeFormUser"
               @submitNewUser="handleSubmitNewUser"
             />
-          </card>
+          </card> 
         </div>
       </div>
     </div>
@@ -72,6 +81,8 @@ import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import FormUpdate from '../components/FormUpdate.vue'
 import ActionsBar from '../components/ActionsBar.vue'
 import FormUserData from '../components/FormUserData.vue'
+
+const exampleItems = [...Array(300).keys()].map(i => ({ id: (i+1), name: `Item ${i+1}`, email: `${i+1}` }))
 export default {
   components: {
     LTable,
@@ -83,10 +94,13 @@ export default {
 },
   data () {
     return {
+      exampleItems,
       users: [],
+      message: 'Deseja excluir o usuário',
+      storeToken: localStorage.getItem('token'),
+      buttonActionBarName: 'Adicionar novo usuário',
       userToUpdate: { name: '', email: '' },
       hiddenOptionsModal: false,
-      storeToken: localStorage.getItem('token'),
       callUpdateForm: false,
       hiddenFormUser: false,
       id: 0,
@@ -106,6 +120,7 @@ export default {
     handleSubmitNewUser(user) {
       Service.create(user).then(res => {
         if (res.status === 201) {
+          //this.renderPaginateUsers()
           this.listUsers()
         }
       })
@@ -142,8 +157,17 @@ export default {
       })
     },
 
-    reloadAllUsers() {
+    onChangePage(users) {
+      // update page of items
+      console.log(users)
+      this.users = users
+    },
+
+    reloadAllUsers(data) {
       this.listUsers()
+      const dataSetInput = data.receiveData = ''
+
+      return dataSetInput
     },
     
     openForm() {
@@ -174,16 +198,24 @@ export default {
     closeUpdateModal() {
       this.closeUpdateModal = false
     },
+
+    renderPaginateUsers() {
+      this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
+    }
   },
   mounted() {
     this.listUsers()
-  }
+    this.onChangePage()
+    //this.renderPaginateUsers()
+  },
 }
 </script>
 
 <style>
 .table-content {
   padding-left: 30px;
+  height: 70vh;
+  overflow: scroll;
 }
 #items-alignment {
   display: flex;

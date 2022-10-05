@@ -1,9 +1,10 @@
 <template>
   <div class="content card form-update-content">
     <div class="icon-update">
-      <font-awesome-icon icon="fa-solid fa-file-pen" />
+      <font-awesome-icon icon="fa-solid fa-plus" />
+      <font-awesome-icon icon="fa-solid fa-circle-play" />
     </div>
-    <form @submit.prevent="$emit('updateMovie', movie)" :movieData="movie"> 
+    <form @submit.prevent="$emit('createNewMovie', movie)"> 
       <label class="label-set">Informações gerais
         <div>
           <label for="title">Título</label>
@@ -42,7 +43,7 @@
             <label for="array-input">Genero</label>
             <div class="array-event">
               <input id="array-input" type="text" v-model="movie.genres.value">
-              <font-awesome-icon @click="takeArrayGenres" icon="fa-solid fa-plus" />
+              <font-awesome-icon @click="takeArrayGenres" :title="message" icon="fa-solid fa-plus" />
             </div>
           </div>
           <div class="first-line">
@@ -67,21 +68,21 @@
             <label for="countries">Paises</label>
             <div class="array-event">
               <input id="array-input" type="text" v-model="movie.countries.value">
-              <font-awesome-icon @click="takeArrayCountries" icon="fa-solid fa-plus" />
+              <font-awesome-icon @click="takeArrayCountries" :title="message" icon="fa-solid fa-plus" />
             </div>
           </div>
           <div class="wd-large-input">
             <label for="array-input">Autores</label>
             <div class="array-event">
               <input id="array-input" type="text" v-model="movie.writers.value">
-              <font-awesome-icon @click="takeArrayWriters" icon="fa-solid fa-plus" />
+              <font-awesome-icon @click="takeArrayWriters" :title="message" icon="fa-solid fa-plus" />
             </div>
           </div>
           <div class="wd-large-input">
             <label for="directors">Diretores</label>
             <div class="array-event">
               <input id="array-input" type="text" v-model="movie.directors.value">
-              <font-awesome-icon @click="takeArrayDirectors" icon="fa-solid fa-plus" />
+              <font-awesome-icon @click="takeArrayDirectors" :title="message" icon="fa-solid fa-plus" />
             </div>
           </div>
           <div class="wd-large-input">
@@ -106,14 +107,14 @@
             <label for="cast">Atores</label>
             <div class="array-event">
               <input id="array-input" type="text" v-model="movie.cast.value">
-              <font-awesome-icon @click="takeArrayCast" icon="fa-solid fa-plus" />
+              <font-awesome-icon @click="takeArrayCast" :title="message" icon="fa-solid fa-plus" />
             </div>
           </div>
           <div class="wd-large-input">
             <label for="language">Idiomas</label>
             <div class="array-event">
               <input id="array-input" type="text" v-model="movie.languages.value">
-              <font-awesome-icon @click="takeArrayLanguages" icon="fa-solid fa-plus" />
+              <font-awesome-icon @click="takeArrayLanguages" :title="message" icon="fa-solid fa-plus" />
             </div>
           </div>
         </div>
@@ -273,7 +274,7 @@
       </div>
       <div class="btn-container">
         <button class="btn btn-primary" type="submit">Cadastrar novo filme</button>
-        <button class="btn btn-warnning" @click="$emit('closeFormUpdateMovie')">Cancelar</button>
+        <button class="btn btn-warnning" @click="$emit('closeFormNewMovie')">Cancelar</button>
       </div>
     </form>
   </div>
@@ -281,100 +282,60 @@
 
 <script>
 export default {
-  name: 'FormUpdateMovie',
-  emits: ['updateMovie', 'closeFormUpdateMovie'],
+  name: 'FormMoviesData',
+  emits: ['createNewMovie', 'closeFormNewMovie'],
   props: {
-    movieData: { type: Object,}
+    userDataMovies: Object
   },
   data() {
     return {
+      message: 'Clique aqui para adicionar a lista',
       movie: {
-        plot: this.movieData.plot,
-        genres: this.movieData.genres,
-        runtime: this.movieData.runtime,
-        cast: this.movieData.cast,
-        num_mflix_comments: this.movieData.num_mflix_comments,
-        poster: this.movieData.poster,
-        title: this.movieData.title,
-        fullplot: this.movieData.fullplot,
-        languages: this.movieData.languages,
-        released: this.movieData.released,
-        directors: this.movieData.directors,
-        writers: this.movieData.writers,
+        plot: '',
+        genres: [],
+        runtime: 0,
+        cast: [],
+        num_mflix_comments: 0,
+        poster: '',
+        title: '',
+        fullplot: '',
+        languages: [],
+        released: '',
+        directors: [],
+        writers: [],
         awards: {
-          wins: this.movieData.awards.wins,
-          nominations: this.movieData.awards.nominations,
-          text: this.movieData.awards.text,
+          wins: 0,
+          nominations: '',
+          text: '',
         },
-        lastupdated: this.movieData.lastUpdated,
-        year: this.movieData.year,
+        lastupdated: '',
+        year: 0,
         imdb: {
-          rating: this.movieData.imdb.rating,
-          votes: this.movieData.imdb.votes,
-          id: this.movieData.imdb.id
+          rating: 0,
+          votes: 0,
+          id: 0
         },
-        countries: this.movieData.countries,
-        type: this.movieData.type,
+        countries: [],
+        type: '',
         tomatoes: {
           viewer: {
-            rating: this.movieData.tomatoes.viewer.rating,
-            numReviews: this.movieData.tomatoes.viewer.numReviewes,
-            meter: this.movieData.tomatoes.viewer.meter,
+            rating: 0,
+            numReviews: 0,
+            meter: 0,
           },
-          dvd: this.movieData.tomatoes.dvd,
+          dvd: '',
           critics: {
-            rating: this.movieData.tomatoes.critics.rating,
-            numReviews: this.movieData.tomatoes.critics.numReviewes,
-            meter: this.movieData.tomatoes.critics.meter,
+            rating: 0,
+            numReviews: 0,
+            meter: 0,
           },
-          rotten: this.movieData.tomatoes.rotten,
-          lastUpdated: this.movieData.tomatoes.lastUpdated,
-          fresh: this.movieData.tomatoes.fresh,
+          rotten: 0,
+          lastUpdated: '',
+          fresh: 0,
         }
       }
     }
   },
-
-  watch: {
-    movieData: {
-      handler(movieData) {
-        this.movie.plot = movieData.plot
-        this.movie.genres = movieData.genres
-        this.movie.runtime = movieData.runtime
-        this.movie.cast = movieData.cast
-        this.movie.num_mflix_comments = movieData.num_mflix_comments
-        this.movie.poster = movieData.poster
-        this.movie.title = movieData.title
-        this.movie.fullplot = movieData.fullplot
-        this.movie.languages = movieData.languages
-        this.movie.released = movieData.released
-        this.movie.directors = movieData.directors
-        this.movie.writers = movieData.writers
-        this.movie.awards.wins = movieData.awards.wins
-        this.movie.awards.nominations = movieData.awards.nominations
-        this.movie.awards.text = movieData.awards.text
-        this.movie.lastUpdated = movieData.lastUpdated
-        this.movie.year = movieData.year
-        this.movie.imdb.rating = movieData.imdb.rating
-        this.movie.imdb.votes = movieData.imdb.votes
-        this.movie.imdb.id = movieData.imdb.id
-        this.movie.countries = movieData.countries
-        this.movie.type = this.movieData.type
-        this.movie.tomatoes.viewer.rating = movieData.tomatoes.viewer.rating
-        this.movie.tomatoes.viewer.numReviewes = movieData.tomatoes.viewer.numReviewes
-        this.movie.tomatoes.viewer.meter = movieData.tomatoes.viewer.meter
-        this.movie.tomatoes.dvd = movieData.tomatoes.dvd
-        this.movie.tomatoes.critics.rating = movieData.tomatoes.critics.rating
-        this.movie.tomatoes.critics.numReviewes = movieData.tomatoes.critics.numReviewes
-        this.movie.tomatoes.critics.meter = movieData.tomatoes.critics.meter
-        this.movie.tomatoes.rotten = movieData.tomatoes.rotten
-        this.movie.tomatoes.lastUpdated = movieData.tomatoes.lastUpdated
-        this.movie.tomatoes.fresh = movieData.tomatoes.fresh
-      },
-      deep: true
-    }
-  },
-
   methods: {
     takeArrayGenres() {
       const genresInput = this.movie.genres.value
@@ -423,10 +384,6 @@ export default {
       console.log(arrayCountries.push(countriesInput))
       this.movie.countries.value = ''
     },
-  },
-
-  mounted() {
-    console.log(this.movieData)
   }
 }  
 </script>

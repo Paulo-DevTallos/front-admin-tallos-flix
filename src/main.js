@@ -17,25 +17,24 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 import Store from './store'
-
 //import fontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import { fa, faImdb } from '@fortawesome/free-brands-svg-icons'
-
+import { faImdb } from '@fortawesome/free-brands-svg-icons'
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
-
 // router setup
 import routes from './routes/routes'
-
 import './registerServiceWorker'
+
+import JwPagination from 'jw-vue-pagination'
 // plugin setup
 library.add(fas, faImdb)
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('jw-pagination', JwPagination)
 
 Vue.config.productionTip = false
 

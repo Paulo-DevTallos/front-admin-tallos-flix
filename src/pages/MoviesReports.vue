@@ -9,6 +9,14 @@
           <h4 class="header-table">Filmes TallosFlix</h4>
           <p class="card-category">Filmes disponíveis na plataforma</p>
         </template>
+        <template>
+          <actions-bar 
+            :title="buttonActionBarName"
+            @searchData="findMovieByName"
+            @reloadList="reloadMoviesList"
+            @openFormData="openFormNewMovie"
+          />
+        </template>
         <div class="table-content">
           <div class="container-box card">
             <ul>
@@ -21,7 +29,7 @@
                           <h3 class="card-title">{{ movie.title }} - {{ movie.year }}</h3>
                           <p class="card-category">{{ movie.plot }}</p>
                         </div>
-                        <div class="icon-menu" @click="optionModal(movie._id)"> 
+                        <div v-if="hiddenBtnMenu && id === movie._id" class="icon-menu" @click="optionModal"> 
                           <font-awesome-icon icon="fa-solid fa-bars" />
                         </div>  
                       </div>
@@ -29,10 +37,18 @@
                         v-if="hiddenOptionModal && id === movie._id"
                         @closeModal="closeOptions"
                         @deleteMovie="deleteMovie(movie._id)"
-                        @updateMovie="updateMovie(movie._id)"
+                        @updateMovie="openFormUpdateMovie(movie._id)"
                       />
-                      <form-update-movie 
-                        v-if="hiddenFormUpdateMovie"  
+                      <form-update-movie
+                        v-if="hiddenFormUpdateMovie"
+                        :movieData="movieToUpdate"
+                        @updateMovie="updateMovieData"
+                        @closeFormUpdateMovie="closeUpdateForm"
+                      />
+                      <form-create-movie 
+                        v-if="hiddenFormNewMovie"
+                        @closeFormNewMovie="closeFormNewMovieModal"
+                        @createNewMovie="createMovie"
                       />
                       <div v-if="hiddenMovieDescription && id === movie._id" class="row-movie-description">
                         <div class="info-movies">
@@ -122,25 +138,29 @@
 </template>
 
 <script>
+import ActionsBar from '../components/ActionsBar.vue'
+import FormCreateMovie from '../components/FormCreateMovie.vue'
 import FormUpdateMovie from '../components/FormUpdateMovie.vue'
 import OptionPopup from '../components/Popups/OptionPopup.vue'
 import ServiceMovies from '../services/axios-movies.request'
 
 export default {
   name: 'MoviesReports',
-  components: { OptionPopup, FormUpdateMovie },
+  components: { OptionPopup, FormUpdateMovie, FormCreateMovie, ActionsBar },
   data() {
     return {
-      movies: [],
       movieToUpdate: {
         plot: '',
         genres: [],
         runtime: 0,
         cast: [],
+        num_mflix_comments: 0,
+        poster: '',
         title: '',
         fullplot: '',
-        language: [],
+        languages: [],
         released: '',
+        directors: [],
         writers: [],
         awards: {
           wins: 0,
@@ -159,21 +179,27 @@ export default {
         tomatoes: {
           viewer: {
             rating: 0,
-            numReviewes: 0,
+            numReviews: 0,
+            meter: 0,
           },
-          fresh: 0,
-          critic: {
+          dvd: '',
+          critics: {
             rating: 0,
-            numReviewes: 0,
+            numReviews: 0,
             meter: 0,
           },
           rotten: 0,
-          lastUpdated: ''
+          lastUpdated: '',
+          fresh: 0,
         }
       },
+      movies: [],
+      buttonActionBarName: 'Adicionar novo Filme',
       hiddenMovieDescription: false,
       hiddenOptionModal: false,
       hiddenFormUpdateMovie: false,
+      hiddenFormNewMovie: false,
+      hiddenBtnMenu: false,
       storeJwt: localStorage.getItem('token'),
       id: 0,
     }
@@ -183,52 +209,104 @@ export default {
     listAllMovies() {
       ServiceMovies.getMovies({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
         const parseMovies = JSON.parse(JSON.stringify(res.data))
-
-        console.log(parseMovies)
         return this.movies = parseMovies
       })
     },
 
-    
+    //create movie
+    createMovie(movie) {
+      console.log(movie)
+      ServiceMovies.createMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, movie)
+        .then(res => {
+          if (res.status === 201) {
+            this.listAllMovies()
+          } 
+        })
+      this.hiddenFormNewMovie = false
+    },
+
+    //find movies
+    findMovieByName(title) {
+      ServiceMovies.findMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, title)
+        .then(res => {
+          return this.movies = res.data
+        })
+    },
+
+    //update movie
+    updateMovieData(movie) {
+      const id = this.id
+      console.log(id)
+      const parseMovie = JSON.parse(JSON.stringify(movie))
+
+      ServiceMovies.updateMovie({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, id, parseMovie)
+        .then(res => {
+          console.log(res.data)
+          if (res.status === 200) {
+            this.listAllMovies()
+          }
+        })
+      this.hiddenFormUpdateMovie = false
+    },
+
+    //delete movie
+    deleteMovie(id) {
+      ServiceMovies.removeMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, id)
+      .then(res => {
+        if (res.status === 200) {
+          this.listAllMovies()
+        }
+      })
+      this.hiddenOptionModal = false
+    },
+
+    //roll down bar movie
     rollingMovieDescription(id) {
       this.hiddenMovieDescription = !this.hiddenMovieDescription
+      this.hiddenBtnMenu = !this.hiddenBtnMenu
       this.id = id
     },
+
+    reloadMoviesList(data) {
+      this.listAllMovies()
+      const dataSetInput = data.receiveData = ''
+
+      return dataSetInput
+    },
     
-    optionModal(id) {
+    //function from menu btn by the movies side
+    optionModal() {
       this.hiddenOptionModal = !this.hiddenOptionModal
-      console.log(id)
     },
 
-    closeOptions(id) {
-      console.log(id)
+    //close modal options box
+    closeOptions() {
+      this.hiddenOptionModal = false
     },
 
-    updateMovie(id) {
+    //open / close forms
+    openFormNewMovie() {
+      this.hiddenFormNewMovie = !this.hiddenFormNewMovie
+    },
+
+    openFormUpdateMovie(id) {
       this.hiddenOptionModal = false
       this.hiddenFormUpdateMovie = !this.hiddenFormUpdateMovie
       console.log(id)  
     },
+    
+    closeFormNewMovieModal() {
+      this.hiddenFormNewMovie = false
+    },
 
-    deleteMovie(id) {
-      ServiceMovies.deleteMovie(id).then(res => {
-        if (res.status === 200) {
-          console.log(id)
-          this.handleRequestMovies()
-        }
-      })
+    closeUpdateForm() {
+      this.hiddenFormUpdateMovie = false
+    },
 
-      this.hiddenOptionModal = false
-    }
   },
   mounted() {
     this.listAllMovies()
   },
-  /*computed: {
-    exibitionImage() {
-      return this.movies
-    }
-  }*/
 }  
 </script>
 
@@ -301,9 +379,12 @@ export default {
 
 @keyframes down {
   from {
-    transform: translateY(-15px);
+    display: none;
+    visibility: hidden;
+    opacity: 0;
   }
   to {
+    opacity: 1;
     transform: translateY(0);
   }
 }

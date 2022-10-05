@@ -3,6 +3,7 @@ import vuex from 'vuex'
 import Service from '../services/axios-users.requests'
 import ServiceMovies from '../services/axios-movies.request'
 import ServiveComments from '../services/axios-comments.request'
+import ServiceTheaters from '../services/axios-theaters.request'
 
 Vue.use(vuex)
 
@@ -16,6 +17,7 @@ export default new vuex.Store({
     users: [],
     movies: [],
     comments: [],
+    theaters: [],
   },
   mutations: {
     authLogin(state, payload) {
@@ -37,6 +39,11 @@ export default new vuex.Store({
       state.movies = payload
       state.token = localStorage.getItem('token')
     },
+
+    getAllTheaters(state, payload) {
+      state.theaters = payload
+      state.token = localStorage.getItem('token')
+    }
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -67,7 +74,6 @@ export default new vuex.Store({
     //get de comments
     handleCommentsRequest(context, token) {
       ServiveComments.getComments({ headers: { Authorization: token }}).then(res => {
-        console.log(token)
         context.commit('getAllComments', JSON.parse(JSON.stringify(res.data)))
       })
     },
@@ -76,6 +82,13 @@ export default new vuex.Store({
     handleMoviesRequest(context, token) {
       ServiceMovies.getMovies({ headers: { Authorization: token }}).then(res => {
         context.commit('getAllMovies', JSON.parse(JSON.stringify(res.data)))
+      })
+    },
+
+    //get de theaters
+    handleTheatersRequest(context, token) {
+      ServiceTheaters.getTheaters({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllTheaters', JSON.parse(JSON.stringify(res.data)))
       })
     }
   }

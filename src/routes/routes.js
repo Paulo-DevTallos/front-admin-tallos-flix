@@ -15,6 +15,7 @@ import CommentsView from '../pages/CommentsView.vue'
 import UsersReports from '../pages/UsersReports'
 import MoviesReports from '../pages/MoviesReports'
 import LogsReports from '../pages/LogsReports'
+import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 //realizando checkagem de permissão para acesso as rotas
 const guard = () => (to, from, next) => {
@@ -26,6 +27,12 @@ const guard = () => (to, from, next) => {
 }
 
 const routes = [
+  {
+    path: '/',
+    name: faHome,
+    component: Login,
+    redirect: '/login'
+  },
   {
     path: '/login',
     name: 'login',

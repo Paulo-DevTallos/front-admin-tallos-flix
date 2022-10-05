@@ -2,7 +2,7 @@
   <div class="bg-login">
     <div class="size-box size-info">
       <div>
-        <img src="/img/TallosFlix-removebg-preview.png" alt="logo TallosFlix">
+        <img src="/img/tallos-flix-oficial-removebg-preview.png" alt="logo TallosFlix">
       </div>
       <div class="title-intro">
         <h1>Bem-vindo(a) ao TallosFlix</h1>

@@ -54,7 +54,7 @@ export default {
   },
 
   mounted() {
-    console.log()
+    console.log(this.user.email)
   }
 }
 </script>

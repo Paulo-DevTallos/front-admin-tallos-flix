@@ -1,18 +1,18 @@
 <template>
   <div class="content">
-    <form @submit.prevent="$emit('searchUser', user.email)" class="form-align">
+    <form @submit.prevent="$emit('searchData', data.receiveData)" class="form-align">
       <base-input   
-        v-model="user.email"
+        v-model="data.receiveData"
         class="input-lg"
-        placeholder="Encontre um usuário por e-mail"
+        placeholder="Realize sua pesquisa"
       />
-      <div @click="$emit('reloadList')" v-if="reloadList" class="reload-list">
+      <div @click="$emit('reloadList', data)" v-if="reloadList" class="btn reload-list">
         <font-awesome-icon icon="fa-solid fa-rotate-right" />
       </div>
       <button type="submit" class="btn btn-style btn-primary">Pesquisa</button>
     </form>
-    <button @click="$emit('openFormUserData')" class="btn btn-style btn-primary">
-      Adicionar novo usuário
+    <button @click="$emit('openFormData')" class="btn btn-style btn-primary">
+      {{ title }}
       <font-awesome-icon icon="fa-solid fa-plus" />
     </button>
   </div>
@@ -23,18 +23,21 @@ import BaseInput from './Inputs/BaseInput.vue'
 export default {
   components: { BaseInput },
   name: 'ActionsBar',
-  emits: ['searchUser', 'reloadList', 'openFormUserData'],
+  emits: ['searchData', 'reloadList', 'openFormData'],
+  props: {
+    title: String,
+  },
   data() {
     return {
-      user: {
-        email: '',
+      data: {
+        receiveData: '',
       }
     }
   },
 
   computed: {
     reloadList() {
-      if (this.user.email !== '') return true
+      if (this.data.receiveData !== '') return true
       else return false
     }
   }
@@ -61,12 +64,24 @@ export default {
 .reload-list {
   margin-right: 25px;
   background-color: #808080;
-  padding: 7px;
+  padding: 6px;
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 0 3px #80808068;
+  animation: roar .4s ease-in-out;
 }
 
+@keyframes roar {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+}
 .reload-list svg {
   font-size: 25px;
   color: #fff;
