@@ -25,6 +25,8 @@ import { faImdb } from '@fortawesome/free-brands-svg-icons'
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
 // router setup
+import {LMap, LTileLayer, LMarker, LTooltip, LCircleMarker} from 'vue2-leaflet'
+import 'leaflet/dist/leaflet.css'
 import routes from './routes/routes'
 import './registerServiceWorker'
 
@@ -35,6 +37,11 @@ Vue.use(VueRouter)
 Vue.use(LightBootstrap)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('jw-pagination', JwPagination)
+Vue.component('l-map', LMap)
+Vue.component('l-tool-tip', LTooltip)
+Vue.component('l-tile-layer', LTileLayer)
+Vue.component('l-marker', LMarker)
+Vue.component('l-circle-marker', LCircleMarker)
 
 Vue.config.productionTip = false
 

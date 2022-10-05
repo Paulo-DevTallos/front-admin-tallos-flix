@@ -2,6 +2,8 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
+
+        <!-- card users length -->
         <div class="col-xl-3 col-md-6">
           <stats-card class="spacing-container">
             <div slot="header" class="icon-warning position-icon">
@@ -14,6 +16,7 @@
           </stats-card>
         </div>
 
+        <!-- card movies length -->
         <div class="col-xl-3 col-md-6">
           <stats-card class="spacing-container">
             <div slot="header" class="icon-success">
@@ -26,6 +29,7 @@
           </stats-card>
         </div>
 
+        <!-- card comments length -->
         <div class="col-xl-3 col-md-6">
           <stats-card class="spacing-container">
             <div slot="header" class="icon-danger">
@@ -38,6 +42,7 @@
           </stats-card>
         </div>
 
+        <!-- card theaters length -->
         <div class="col-xl-3 col-md-6">
           <stats-card class="spacing-container">
             <div slot="header" class="icon-info">
@@ -53,96 +58,40 @@
       </div>
       <div class="row">
         <div class="col-md-8">
-          <chart-card 
-            :chart-data="lineChart.data"
-            :chart-options="lineChart.options"
-            :responsive-options="lineChart.responsiveOptions"
-          >
+          <card>
             <template slot="header">
-              <h4 class="card-title">Users Behavior</h4>
-              <p class="card-category">24 Hours performance</p>
+              <h4 class="card-title">Disponibilidades de Salas de Cinema</h4>
+              <p class="card-category">Cinemas disponíveis</p>
             </template>
-          </chart-card>
+            <template>
+              <l-map style="height: 360px" :zoom="zoom" :center="center">
+                <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+                <div v-for="theater in this.$store.state.theaters" :key="theater._id">
+                  <l-circle-marker
+                    :lat-lng="theater.location.geo.coordinates"
+                    :radius="2"
+                    color="red"
+                  >
+                    <l-tool-tip>{{ theater.location.address.city }}</l-tool-tip>
+                  </l-circle-marker>
+                </div>
+              </l-map>
+            </template>
+          </card>  
         </div>
-
         <div class="col-md-4">
           <chart-card :chart-data="pieChart.data" chart-type="Pie">
             <template slot="header">
-              <h4 class="card-title">Email Statistics</h4>
-              <p class="card-category">Last Campaign Performance</p>
+              <h4 class="card-title">Filmes e Séries</h4>
+              <p class="card-category">Dados estatisticos</p>
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-info"></i> Open
-                <i class="fa fa-circle text-danger"></i> Bounce
-                <i class="fa fa-circle text-warning"></i> Unsubscribe
-              </div>
-              <hr>
-              <div class="stats">
-                <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                <i class="fa fa-circle text-danger"></i> Filmes
+                <i class="fa fa-circle text-warning"></i> Series
               </div>
             </template>
           </chart-card>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-6">
-          <chart-card
-            :chart-data="barChart.data"
-            :chart-options="barChart.options"
-            :chart-responsive-options="barChart.responsiveOptions"
-            chart-type="Bar">
-            <template slot="header">
-              <h4 class="card-title">2014 Sales</h4>
-              <p class="card-category">All products including Taxes</p>
-            </template>
-            <template slot="footer">
-              <div class="legend">
-                <i class="fa fa-circle text-info"></i> Tesla Model S
-                <i class="fa fa-circle text-danger"></i> BMW 5 Series
-              </div>
-              <hr>
-              <div class="stats">
-                <i class="fa fa-check"></i> Data information certified
-              </div>
-            </template>
-          </chart-card>
-        </div>
-
-        <div class="col-md-6">
-          <card>
-            <template slot="header">
-              <h5 class="title">Tasks</h5>
-              <p class="category">Backend development</p>
-            </template>
-            <l-table :data="tableData.data"
-                     :columns="tableData.columns">
-              <template slot="columns"></template>
-
-              <template slot-scope="{row}">
-                <td>
-                  <base-checkbox v-model="row.checked"></base-checkbox>
-                </td>
-                <td>{{row.title}}</td>
-                <td class="td-actions text-right">
-                  <button type="button" class="btn-simple btn btn-xs btn-info" v-tooltip.top-center="editTooltip">
-                    <i class="fa fa-edit"></i>
-                  </button>
-                  <button type="button" class="btn-simple btn btn-xs btn-danger" v-tooltip.top-center="deleteTooltip">
-                    <i class="fa fa-times"></i>
-                  </button>
-                </td>
-              </template>
-            </l-table>
-            <div class="footer">
-              <hr>
-              <div class="stats">
-                <i class="fa fa-history"></i> Updated 3 minutes ago
-              </div>
-            </div>
-          </card>
-
         </div>
       </div>
     </div>
@@ -152,22 +101,35 @@
 import ChartCard from 'src/components/Cards/ChartCard.vue'
 import StatsCard from 'src/components/Cards/StatsCard.vue'
 import LTable from 'src/components/Table.vue'
+import {LMap, LTileLayer, LToolTip, LCircleMarker} from 'vue2-leaflet'
 
 export default {
   components: {
+    LMap,
+    LTileLayer,
     LTable,
     ChartCard,
-    StatsCard
+    StatsCard,
+    LToolTip,
+    LCircleMarker
   },
   data () {
     return {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution:
+        '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      zoom: 15,
+      center: [51.505, -0.159],
+      markerLatLng: [51.504, -0.159],
       storeJwt: localStorage.getItem('token'),
       editTooltip: 'Edit Task',
       deleteTooltip: 'Remove',
       pieChart: {
         data: {
-          labels: ['40%', '20%', '40%'],
-          series: [40, 20, 40]
+          labels: [this.moviesCount, this.seriesCount],
+          series: [80, 20],
+          moviesCount : undefined,
+          seriesCount: undefined
         }
       },
       lineChart: {
@@ -270,6 +232,17 @@ export default {
     this.renderComments()
     this.renderMovies()
     this.renderTheaters()
+    
+    for (let index = 0; index < this.$store.state.movies.length; index++) {
+      if(this.$store.state.movies[index].type === "movie"){
+        //this.moviesCount++
+        console.log(this.$store.state.movies[index].type)
+      }
+      else if(this.$store.state.movies[index].type === "series"){
+        //this.seriesCount++
+        console.log(this.seriesCount, 'teste')
+      }
+    }
   }
 }
 </script>
