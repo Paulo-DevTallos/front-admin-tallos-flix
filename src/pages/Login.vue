@@ -1,5 +1,5 @@
-<template>
-  <div class="bg-login">
+<template slot="body">
+  <div class="content bg-login container-fluid">
     <div class="size-box size-info">
       <div>
         <img src="/img/tallos-flix-oficial-removebg-preview.png" alt="logo TallosFlix">
@@ -11,31 +11,16 @@
       <div>
         <button 
           class="btn-login"
-          @click="showLoginDisplay"
-          v-if="showBtn"  
-        >Faça Login</button>
-      </div>
-      <div v-if="displayNone" class="login-area">
-        <div 
-          class="login"
-          @click="toggleUser"
-          >
-          (i)
-          Acesse seu ambiente
-        </div>
-        <div 
-          class="login"
           @click="toggleAdmin"
-        >
-          Área do administrador
-        </div>
+          v-if="showFormLogin"  
+        >Faça Login</button>
       </div>
     </div>
     <div  class="size-box form-content-area">   
       <div class="form-user" v-if="hiddenAdmin">
         <form @submit.prevent="handleSubmitLogin">
           <div>
-            <h2>Ambiente de Admin</h2>
+            <h2>Área do Administrador</h2>
           </div>
           <label for="email">E-mail</label>
           <!--<input type="text" id="email" placeholder="meuemail@example.com">-->
@@ -57,32 +42,11 @@
           />
           <button type="submit" class="btn-acess">Entrar</button>
         </form>
-      </div>
-      <div class="form-user" v-if="hiddenUser">
-        <form @submit.prevent="testeUser">
-          <div>
-            <h2>Ambiente de Usuário</h2>
-          </div>
-          <label for="email">E-mail</label>
-          <!--<input type="text" id="email" placeholder="meuemail@example.com">-->
-          <base-input 
-            id="email"
-            type="text"
-            placeholder="meuemail@example.com"
-            v-model="user.email"
-            :addonLeftIcon="'nc-icon nc-email-83'"
-          />
-          <label for="password">Senha</label>
-          <!--<input type="text" id="password" placeholder="digite sua senha">-->
-          <base-input 
-            id="password"
-            type="password"
-            placeholder="senha"
-            v-model="user.password"
-            :addonLeftIcon="'nc-icon nc-lock-circle-open'"
-          />
-          <button type="submit" class="btn-acess">Entrar</button>
-        </form>
+        <message 
+          v-if="hiddenMessageToast"
+          :icon_type="icons"
+          :message_status="message"
+        />
       </div>
     </div>
   </div>
@@ -90,13 +54,17 @@
 
 <script>
 import BaseInput from '../components/Inputs/BaseInput.vue'
+import Message from '../components/Popups/Message.vue';
 export default {
   name: "Login",
-  components: { BaseInput },
+  components: { BaseInput, Message },
   data() {
     return {
+      message: '',
+      icons: '',
+      hiddenMessageToast: false,
       displayNone: false,
-      showBtn: true,
+      showFormLogin: true,
       hiddenAdmin: false,
       hiddenUser: false,
       user: {
@@ -106,23 +74,42 @@ export default {
     };
   },
   methods: {
+    popupMessage(msg, icon) {
+      this.hiddenMessageToast = true
+      this.message = msg
+      this.icons = icon
+      setTimeout(() => {
+        this.hiddenMessageToast = false
+      }, 4000)
+    },
+
+    //login method
     handleSubmitLogin() {
-      this.$store.dispatch('handleSubmitLogin', this.user)
+      if (this.user.email === '' && this.user.password === '') {
+        this.popupMessage('Digite seus dados corretamente!', 'fa-circle-exclamation')
+      }
+      else if (this.user.email === '') {
+        this.popupMessage('Digite um e-mail válido!', 'fa-circle-exclamation') 
+      }
+      else if (this.user.password === '') {
+        this.popupMessage('Digite uma senha válida!', 'fa-circle-exclamation')
+      }
+      else {
+        try {
+          this.$store.dispatch('handleSubmitLogin', this.user)
+        }
+        catch(Error) {
+          console.error(Error, 'Dados Incorretos')
+          this.popupMessage('Seus dados estão incorretos!', 'fa-triangle-exclamation')
+        }
+      }
     },
-    showLoginDisplay() {
-      this.displayNone = true;
-      this.showBtn = false;
-    },
+
     toggleAdmin() {
       if (this.hiddenUser === true) this.hiddenUser = false;
       this.hiddenAdmin = !this.hiddenAdmin;
     },
-    toggleUser() {
-      if (this.hiddenAdmin === true) this.hiddenAdmin = false;
-      this.hiddenUser = !this.hiddenUser;
-    }
   },
-  components: { BaseInput }
 }  
 </script>
 
