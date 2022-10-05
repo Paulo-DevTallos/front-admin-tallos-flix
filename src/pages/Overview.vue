@@ -72,7 +72,7 @@
                     :radius="2"
                     color="red"
                   >
-                    <l-tool-tip>{{ theater.location.address.city }}</l-tool-tip>
+                    <l-tooltip>{{ theater.location.address.city }}</l-tooltip>
                   </l-circle-marker>
                 </div>
               </l-map>
@@ -87,8 +87,10 @@
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-danger"></i> Filmes
-                <i class="fa fa-circle text-warning"></i> Series
+                <i class="fa fa-circle text-danger">{{ $store.state.movies.length }}</i>Filmes
+                <i class="fa fa-circle text-danger">Teste</i>Series
+                <!--<i class="fa fa-circle text-danger"></i> Filmes
+                <i class="fa fa-circle text-warning"></i> Series-->
               </div>
             </template>
           </chart-card>
@@ -119,14 +121,14 @@ export default {
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       zoom: 15,
-      center: [51.505, -0.159],
-      markerLatLng: [51.504, -0.159],
+      center: [-3.87075, -38.61893],
+      markerLatLng: [-3.87075, -38.61893],
       storeJwt: localStorage.getItem('token'),
       editTooltip: 'Edit Task',
       deleteTooltip: 'Remove',
       pieChart: {
         data: {
-          labels: [this.moviesCount, this.seriesCount],
+          labels: [],
           series: [80, 20],
           moviesCount : undefined,
           seriesCount: undefined
