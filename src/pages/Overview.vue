@@ -159,55 +159,7 @@ export default {
             right: 50
           }
         },
-        responsiveOptions: [
-          ['screen and (max-width: 640px)', {
-            axisX: {
-              labelInterpolationFnc (value) {
-                return value[0]
-              }
-            }
-          }]
-        ]
       },
-      barChart: {
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          series: [
-            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-            [412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636, 695]
-          ]
-        },
-        options: {
-          seriesBarDistance: 10,
-          axisX: {
-            showGrid: false
-          },
-          height: '245px'
-        },
-        responsiveOptions: [
-          ['screen and (max-width: 640px)', {
-            seriesBarDistance: 5,
-            axisX: {
-              labelInterpolationFnc (value) {
-                return value[0]
-              }
-            }
-          }]
-        ]
-      },
-      tableData: {
-        data: [
-          {title: 'Sign contract for "What are conference organizers afraid of?"', checked: false},
-          {title: 'Lines From Great Russian Literature? Or E-mails From My Boss?', checked: true},
-          {
-            title: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
-            checked: true
-          },
-          {title: 'Create 4 Invisible User Experiences you Never Knew About', checked: false},
-          {title: 'Read "Following makes Medium better"', checked: false},
-          {title: 'Unfollow 5 enemies from twitter', checked: false}
-        ]
-      }
     }
   },
 
