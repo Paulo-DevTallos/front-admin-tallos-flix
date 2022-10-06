@@ -72,8 +72,10 @@ $orange: #f90;
 $dark-orange: #f63;
 
 .pagination {
+  padding: 30px 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 100%;
 
   .item {
     padding: 0.5rem 0.75rem;
@@ -102,7 +104,6 @@ $dark-orange: #f63;
       color: white;
       background-color: $orange;
       border-color: $dark-orange;
-      z-index: 2;
     }
 
     + .item {
