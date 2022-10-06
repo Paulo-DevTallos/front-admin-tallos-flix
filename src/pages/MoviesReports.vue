@@ -132,7 +132,7 @@
             </ul>
           </div>
         </div>
-        <div class="card-footer align-p pb-0 pt-3">
+        <div class="align-p pt-3">
           <pagination
             v-if="movies.length"
             :skip="skip"
@@ -501,7 +501,7 @@ export default {
 
 .align-p {
   display: flex;
-  text-align: center;
-  overflow-x: autoo;
+  justify-content: flex-start;
+  overflow-x: auto;
 }
 </style>
