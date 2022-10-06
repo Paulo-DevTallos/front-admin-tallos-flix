@@ -1,13 +1,23 @@
 <template>
   <div class="pagination">
     <button
-      v-for="(page, index) in pages" 
+      v-if="showPrevious"
+      class="item prev"
+      @click="changePage(current - 1)"
+    >
+      &laquo;
+    </button>
+    <button
+      v-for="(page, index) in pages"
       :key="page"
       class="item"
       :class="{ current: page === current }"
-      @click="onChangePage(index)"
+      @click="changePage(index)"
     >
       {{ page }}
+    </button>
+    <button v-if="showNext" class="item next" @click="changePage(current + 1)">
+      &raquo;
     </button>
   </div>
 </template>
@@ -16,9 +26,9 @@
 export default {
   name: 'Pagination',
   props: {
-    offSet: {
+    skip: {
       type: [String, Number],
-      default: 0,
+      default: 1,
     },
     total: {
       type: [String, Number],
@@ -27,27 +37,78 @@ export default {
     limit: {
       type: [String, Number],
       default: 10,
-    }
-  },
-
-  computed: {
-    current() {
-      return this.offSet ? this.offSet + 1 : 1
     },
-
-    pages() {
-      const quantity = Math.ceil(this.total / this.limit)
-
-      if (quantity <= 1) return [1]
-
-      return Array.from(Array(quantity).keys(), (i) => i + 1)
-    }
   },
+  computed: {
+    showPrevious() {
+      return this.current > 1;
+    },
+    showNext() {
+      return this.total > this.limit * this.current;
+    },
+    current() {
+      return this.skip ? this.skip + 1 : 1;
+    },
+    pages() {
+      const quantity = Math.ceil(this.total / this.limit);
 
+      if (quantity <= 1) return [1];
+
+      return Array.from(Array(quantity).keys(), (i) => i + 1);
+    },
+  },
   methods: {
-    onChangePage(offSet) {
-      this.$emit('chance-page', offSet)
+    changePage(skip) {
+      this.$emit('change-page', skip);
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+$light-grey: #cccccc;
+$dark-grey: #333333;
+$orange: #f90;
+$dark-orange: #f63;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+
+  .item {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid $light-grey;
+    cursor: pointer;
+    background-color: white;
+
+    &:first-child {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+
+    &:last-child {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+
+    &:hover {
+      background-color: $light-grey;
+      border-color: lighten($dark-grey, 50%);
+      z-index: 3;
+    }
+
+    &.current {
+      cursor: default;
+      color: white;
+      background-color: $orange;
+      border-color: $dark-orange;
+      z-index: 2;
+    }
+
+    + .item {
+      margin-left: -1px;
+      margin-right: 0;
     }
   }
 }
-</script>
+</style>
