@@ -117,7 +117,7 @@ export default {
         email: localStorage.getItem('email'),
         movie_id: '',
         text: '',
-        date: new Date().toISOString().substring(0, 10),
+        date: new Date('YYYY [escaped] YYYY'),
       }
     }
   },
@@ -161,7 +161,7 @@ export default {
 
         this.hiddenChoosePopup = false
     },
-
+    
     findCommentsByUserName(name) {  
       ServiceComments.findComment({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, name)
         .then(res => {
