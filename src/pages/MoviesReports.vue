@@ -132,6 +132,15 @@
             </ul>
           </div>
         </div>
+        <div class="card-footer align-p pb-0 pt-3">
+          <pagination
+            v-if="movies.length"
+            :skip="skip"
+            :total="total"
+            :limit="limit"
+            @change-page="changePage"
+          ></pagination>
+        </div>
       </card>
     </div>
   </div>
@@ -143,10 +152,12 @@ import FormCreateMovie from '../components/FormCreateMovie.vue'
 import FormUpdateMovie from '../components/FormUpdateMovie.vue'
 import OptionPopup from '../components/Popups/OptionPopup.vue'
 import ServiceMovies from '../services/axios-movies.request'
+import Pagination from '../components/Pagination.vue'
+import { http } from '../services/http'
 
 export default {
   name: 'MoviesReports',
-  components: { OptionPopup, FormUpdateMovie, FormCreateMovie, ActionsBar },
+  components: { OptionPopup, FormUpdateMovie, FormCreateMovie, ActionsBar, Pagination },
   data() {
     return {
       movieToUpdate: {
@@ -194,6 +205,9 @@ export default {
         }
       },
       movies: [],
+      skip: 1,
+      total: 0,
+      limit: 20,
       buttonActionBarName: 'Adicionar novo Filme',
       hiddenMovieDescription: false,
       hiddenOptionModal: false,
@@ -207,10 +221,22 @@ export default {
   methods: {
     //get movies
     listAllMovies() {
-      ServiceMovies.getMovies({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
+      const url = `/movies/paginate?limit=${this.limit}&skip=${this.skip}`
+      console.log(url)
+      http.get(url).then(res => {
+        this.movies = res.data.result
+        this.total = res.data.count
+      })
+      /*ServiceMovies.getMovies({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
         const parseMovies = JSON.parse(JSON.stringify(res.data))
         return this.movies = parseMovies
-      })
+      })*/
+    },
+
+    changePage(value) {
+      console.log(value)
+      this.skip = value
+      this.listAllMovies()
     },
 
     //create movie
@@ -471,5 +497,11 @@ export default {
 .information-movie-painel {
   display: flex;
   justify-content: space-between;
+}
+
+.align-p {
+  display: flex;
+  text-align: center;
+  overflow-x: autoo;
 }
 </style>
