@@ -48,7 +48,7 @@
                 </div>
               </div>
             </div>
-            <div class="card-footer pb-0 pt-3">
+            <div class="card-footer align-p pb-0 pt-3">
               <pagination
                 v-if="users.length"
                 :skip="skip"
@@ -283,6 +283,10 @@ export default {
   padding: 12px;
   border-bottom: 1px solid #ccc;
   font-size: 14px;
+}
+
+.align-p {
+  text-align: center;
 }
 </style>
 
