@@ -46,14 +46,16 @@
                     @closeModal="hiddenChooseModal"
                   />
                 </div>
-                <div class="card-footer pb-0 pt-3">
-                  <jw-pagination 
-                    :pageSize="10" 
-                    :items="this.$store.state.users" 
-                    @changePage="onChangePage"
-                  ></jw-pagination>
-                </div>
               </div>
+            </div>
+            <div class="card-footer pb-0 pt-3">
+              <pagination
+                v-if="users.length"
+                :skip="skip"
+                :total="total"
+                :limit="limit"
+                @change-page="changePage"
+              ></pagination>
             </div>
             <form-update
               v-if="callUpdateForm"
@@ -74,6 +76,7 @@
 </template>
 
 <script>
+import { http } from '../services/http'
 import LTable from 'src/components/Table.vue'
 import Card from 'src/components/Cards/Card.vue'
 import Service from '../services/axios-users.requests'
@@ -81,8 +84,8 @@ import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import FormUpdate from '../components/FormUpdate.vue'
 import ActionsBar from '../components/ActionsBar.vue'
 import FormUserData from '../components/FormUserData.vue'
+import Pagination from '../components/Pagination.vue'
 
-const exampleItems = [...Array(300).keys()].map(i => ({ id: (i+1), name: `Item ${i+1}`, email: `${i+1}` }))
 export default {
   components: {
     LTable,
@@ -90,12 +93,15 @@ export default {
     ChoosePopup,
     FormUpdate,
     ActionsBar,
-    FormUserData
+    FormUserData,
+    Pagination
 },
   data () {
     return {
-      exampleItems,
       users: [],
+      skip: 1,
+      total: 0,
+      limit: 10,
       message: 'Deseja excluir o usuário',
       storeToken: localStorage.getItem('token'),
       buttonActionBarName: 'Adicionar novo usuário',
@@ -110,10 +116,20 @@ export default {
   methods: {
     //list request
     listUsers() {
-      Service.listar({ headers: { Authorization: `Bearer ${this.storeToken}` }}).then(res => {
-        const dataParse = JSON.parse(JSON.stringify(res.data))
-        this.users = dataParse
+      const url = `/users/paginate?limit=${this.limit}&skip=${this.skip}`
+      console.log(url) 
+      http.get(url).then(res => {
+        this.users = res.data.result
+        this.total = res.data.count
       })
+    },
+
+    //change page function
+    changePage(value) {
+      console.log(value)
+      this.skip = value
+      console.log(this.skip)
+      this.listUsers()
     },
 
     //create request
@@ -157,11 +173,11 @@ export default {
       })
     },
 
-    onChangePage(users) {
+    /*onChangePage(users) {
       // update page of items
       console.log(users)
       this.users = users
-    },
+    },*/
 
     reloadAllUsers(data) {
       this.listUsers()
@@ -205,7 +221,7 @@ export default {
   },
   mounted() {
     this.listUsers()
-    this.onChangePage()
+    this.changePage()
     //this.renderPaginateUsers()
   },
 }
@@ -269,3 +285,5 @@ export default {
   font-size: 14px;
 }
 </style>
+
+
