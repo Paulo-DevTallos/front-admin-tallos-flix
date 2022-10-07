@@ -153,11 +153,6 @@ components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination 
         this.theaters = res.data.result
         this.total = res.data.count
       })
-      /*ServiceTheaters.getTheaters({ headers: { Authentication: `Bearer ${this.storeJwt}}`}})
-        .then(res => {
-          const parseTheater = JSON.parse(JSON.stringify(res.data))
-          return this.theaters = parseTheater
-        })*/
     },
 
     changePage(value) {
