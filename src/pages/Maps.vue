@@ -58,17 +58,16 @@
                 </div>
               </div>
             </div>
+            <div class="align-p pt-3">
+              <pagination
+                v-if="theaters.length"
+                :skip="skip"
+                :total="total"
+                :limit="limit"
+                @change-page="changePage"
+              ></pagination>
+            </div>
           </card> 
-          <gmap-map
-            id="map"
-            :center="center"
-            :zoom="13"
-            :options="options"
-            map-type-id="terrain"
-          >
-            <gmap-marker :position="center">
-            </gmap-marker>
-          </gmap-map>
         </div>
       </div>
     </div>
@@ -76,25 +75,23 @@
 </template>
 <script>
 import ServiceTheaters from '../services/axios-theaters.request'
-import {API_KEY} from './Maps/API_KEY'
-import Vue from 'vue'
-import * as VueGoogleMaps from 'vue2-google-maps'
 import Card from '../components/Cards/Card.vue'
 import ActionsBar from '../components/ActionsBar.vue'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import BaseInput from '../components/Inputs/BaseInput.vue'
+import Pagination from '../components/Pagination.vue'
 import FormTheater from '../components/FormTheater.vue'
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: API_KEY
-  }
-})
+import { http } from '../services/http'
+
 export default {
 name: 'Maps',
-components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater },
+components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination },
   data () {
     return {
       theaters: [],
+      skip: 1,
+      total: 0, 
+      limit: 20,
       hiddenFormTheater: false,
       storeJwt: localStorage.getItem('token'),
       buttonActionBarName: 'Adicionando nova sala de cinema',
@@ -150,12 +147,25 @@ components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater },
   methods: {
     //list all cines
     listAllTheaters() {
-      ServiceTheaters.getTheaters({ headers: { Authentication: `Bearer ${this.storeJwt}}`}})
+      const url = `/theaters/paginate?limit=${this.limit}&skip=${this.skip}`
+
+      http.get(url).then(res => {
+        this.theaters = res.data.result
+        this.total = res.data.count
+      })
+      /*ServiceTheaters.getTheaters({ headers: { Authentication: `Bearer ${this.storeJwt}}`}})
         .then(res => {
           const parseTheater = JSON.parse(JSON.stringify(res.data))
           return this.theaters = parseTheater
-        })
+        })*/
     },
+
+    changePage(value) {
+      console.log(value)
+      this.skip = value
+      this.listAllTheaters()
+    },
+
 
     createTheater(theater) {
       ServiceTheaters.createTheater({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, theater)
