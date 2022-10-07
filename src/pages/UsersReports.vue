@@ -114,27 +114,19 @@ export default {
     }
   },
   methods: {
-    //list request
-    listUsers() {
+    //list request - paginate
+    async listUsers() {
       const url = `/users/paginate?limit=${this.limit}&skip=${this.skip}`
-      console.log(url) 
-      http.get(url).then(res => {
+
+      await http.get(url).then(res => {
         this.users = res.data.result
         this.total = res.data.count
       })
     },
 
-    //change page function
-    changePage(value) {
-      console.log(value)
-      this.skip = value
-      console.log(this.skip)
-      this.listUsers()
-    },
-
     //create request
-    handleSubmitNewUser(user) {
-      Service.create(user).then(res => {
+    async handleSubmitNewUser(user) {
+      await Service.create(user).then(res => {
         if (res.status === 201) {
           //this.renderPaginateUsers()
           this.listUsers()
@@ -144,19 +136,19 @@ export default {
     },
 
     //getuser
-    findUserByEmail(email) {
-      Service.findByEmail({ headers: { Authorization: `Bearer ${this.storeToken}`}}, email)
+    async findUserByEmail(email) {
+      await Service.findByEmail({ headers: { Authorization: `Bearer ${this.storeToken}`}}, email)
       .then(res => {
         return this.users = res.data
       })
     },
 
     //update request
-    updateUser(user) {
+    async updateUser(user) {
       const id = this.update_id
       const parseUser = JSON.parse(JSON.stringify(user))
 
-      Service.update({ headers: { Authorization: `Bearer ${this.storeToken}` }}, id, parseUser).then(res => {
+      await Service.update({ headers: { Authorization: `Bearer ${this.storeToken}` }}, id, parseUser).then(res => {
         if (res.status === 200) {
           this.listUsers()  
         }
@@ -165,20 +157,21 @@ export default {
     },
 
     //delete request
-    deleteUser(id) {
-      Service.remove({ headers: { Authorization: `Bearer ${this.storeToken}` }}, id).then(res => {
+    async deleteUser(id) {
+      await Service.remove({ headers: { Authorization: `Bearer ${this.storeToken}` }}, id).then(res => {
         if (res.status === 200) {
           this.listUsers()
         }
       })
     },
 
-    /*onChangePage(users) {
-      // update page of items
-      console.log(users)
-      this.users = users
-    },*/
+    //change page function
+    changePage(value) {
+      this.skip = value
+      this.listUsers()
+    },
 
+     //reload search
     reloadAllUsers(data) {
       this.listUsers()
       const dataSetInput = data.receiveData = ''
@@ -186,6 +179,7 @@ export default {
       return dataSetInput
     },
     
+    //toggle functions
     openForm() {
       this.hiddenFormUser = !this.hiddenFormUser
     },
@@ -214,15 +208,10 @@ export default {
     closeUpdateModal() {
       this.closeUpdateModal = false
     },
-
-    renderPaginateUsers() {
-      this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
-    }
   },
+
   mounted() {
     this.listUsers()
-    this.changePage()
-    //this.renderPaginateUsers()
   },
 }
 </script>
