@@ -23,8 +23,11 @@
             <div class="table-content">
               <div id="comments-table-row">
                 <div class="comments-table-row" v-for="comment in comments" :key="comment._id">
-                  <div class="content card form-comment-content" v-if="hiddenCommentForm"> 
-                    <div class="content container-fluid">
+                  <div class="card form-comment-content" v-if="hiddenCommentForm"> 
+                    <div class="container-fluid">
+                      <div class="close-icon" @click="closeFormComment">
+                        <font-awesome-icon icon="fa-solid fa-xmark" />
+                      </div>
                       <div class="icon-comment">
                         <font-awesome-icon icon="fa-solid fa-plus" />
                         <font-awesome-icon icon="fa-solid fa-comment" />
@@ -200,6 +203,10 @@ export default {
       this.hiddenCommentForm = !this.hiddenCommentForm
     },
 
+    closeFormComment() {
+      this.hiddenCommentForm = false
+    },
+
     closePopupModal() {
       this.hiddenChoosePopup = false
     },
@@ -282,7 +289,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.100);
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.030);
   padding: 30px;
   z-index: 1004;
 }
@@ -325,6 +332,18 @@ select {
 textarea {
   margin: 15px 0;
   height: 100px;
+}
+
+.close-icon {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+}
+
+.close-icon svg {
+  font-size: 25px;
+  color: #002966;
+  cursor: pointer;
 }
 
 .alignment-footer {
