@@ -11,7 +11,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Usuários na plataforma</p>
-              <h4 class="card-title">{{ $store.state.users.length }}</h4>
+              <h4 class="card-title">{{ $store.state.countUsers }}</h4>
             </div>
           </stats-card>
         </div>
@@ -24,7 +24,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Filmes disponíveis</p>
-              <h4 class="card-title">{{ $store.state.movies.length }}</h4>
+              <!--<h4 class="card-title">{{ $store.state.movies.length }}</h4>-->
             </div>
           </stats-card>
         </div>
@@ -37,7 +37,10 @@
             </div>
             <div slot="content">
               <p class="card-category">Comentários dos filmes</p>
-              <h4 class="card-title">{{ $store.state.comments.length }}</h4>
+              <h4 
+                class="card-title"
+                v-for="comment in this.total" :key="comment._id"
+              >{{ comment.name }}</h4>
             </div>
           </stats-card>
         </div>
@@ -50,7 +53,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Cinemas catalogados</p>
-              <h4 class="card-title">{{ $store.state.theaters.length }}</h4>
+              <h4 class="card-title">{{ this.$store.state.countTheaters }}</h4>
             </div>
           </stats-card>
         </div>
@@ -87,7 +90,7 @@
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-danger">{{ $store.state.movies.length }}</i>Filmes
+                <!--<i class="fa fa-circle text-danger">{{ $store.state.movies.length }}</i>Filmes-->
                 <i class="fa fa-circle text-danger">Teste</i>Series
                 <!--<i class="fa fa-circle text-danger"></i> Filmes
                 <i class="fa fa-circle text-warning"></i> Series-->
@@ -99,11 +102,13 @@
     </div>
   </div>
 </template>
+
 <script>
 import ChartCard from 'src/components/Cards/ChartCard.vue'
 import StatsCard from 'src/components/Cards/StatsCard.vue'
 import LTable from 'src/components/Table.vue'
 import {LMap, LTileLayer, LToolTip, LCircleMarker} from 'vue2-leaflet'
+import { http } from '../services/http'
 
 export default {
   components: {
@@ -117,7 +122,6 @@ export default {
   },
   data () {
     return {
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       zoom: 15,
@@ -160,34 +164,50 @@ export default {
           }
         },
       },
+      skip: 0,
+      total: 0,
+      limit: 20,
     }
   },
 
   methods: {
-    renderUsers() {
+    renderUsersCount() {
       this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
     },
 
-    renderComments() {
-      this.$store.dispatch('handleCommentsRequest', `Bearer ${this.storeJwt}`)
+    async renderCommentsCount() {
+      const url = `/users/paginate?limit=${this.limit}&skip=${this.skip}`
+
+      await http.get(url).then(res => {
+        this.users = res.data.result
+        this.total = res.data.count
+      })
+      
+      //this.$store.dispatch('handleCommentsRequest', `Bearer ${this.storeJwt}`)
     },
 
-    renderMovies() {
+    /*renderMovies() {
       this.$store.dispatch('handleMoviesRequest', `Bearer ${this.storeJwt}`)
-    },
+    },*/
 
     renderTheaters() {
+      this.$store.dispatch('handleTheaters', `Bearer ${this.storeJwt}`)
+    },
+
+    renderTheatersCount() {
       this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
     }
   },
 
   mounted() {
-    this.renderUsers()
-    this.renderComments()
-    this.renderMovies()
+    this.renderUsersCount()
+    this.renderCommentsCount()
+    //this.renderMovies()*/
+    this.renderTheatersCount()
     this.renderTheaters()
-    
-    for (let index = 0; index < this.$store.state.movies.length; index++) {
+
+
+    /*for (let index = 0; index < this.$store.state.movies.length; index++) {
       if(this.$store.state.movies[index].type === "movie"){
         //this.moviesCount++
         console.log(this.$store.state.movies[index].type)
@@ -196,7 +216,7 @@ export default {
         //this.seriesCount++
         console.log(this.seriesCount, 'teste')
       }
-    }
+    }*/
   }
 }
 </script>

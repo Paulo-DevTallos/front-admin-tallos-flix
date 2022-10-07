@@ -26,6 +26,7 @@
 
 <script>
 import BaseInput from './Inputs/BaseInput.vue';
+
 export default {
   name: "FormUpdate",
   components: { BaseInput },
@@ -52,10 +53,6 @@ export default {
       deep: true
     }
   },
-
-  mounted() {
-    console.log(this.user.email)
-  }
 }
 </script>
 

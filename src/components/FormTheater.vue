@@ -57,7 +57,7 @@
         <div>
           <div id="array-event">
             <div>
-              <label for="lat">Latitude</label>
+              <label for="lat">Latitude e Longitude</label>
               <input id="array-input" type="number" v-model="theater.location.geo.coordinates.value">
               <font-awesome-icon @click="takeArrayCoordinators" :title="message_arr" icon="fa-solid fa-plus" />
             </div>

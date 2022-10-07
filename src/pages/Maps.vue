@@ -15,6 +15,8 @@
               <actions-bar
                 :title="buttonActionBarName"
                 @openFormData="openFormTheater"
+                @searchData="searchTheater"
+                @reloadList="reloadList"
               />
             </template>
             <div class="table-content">
@@ -22,6 +24,12 @@
                 v-if="hiddenFormTheater"
                 @closeFormTheater="closeFormTheater"
                 @createNewTheater="createTheater"
+              />
+              <form-update-theater 
+                v-if="hiddenFormUpdate"
+                :theaterData="theaterToUpdate"
+                @closeFormTheater="closeModalUpdateTheater"
+                @theaterUpdate="updateTheater"
               />
               <div id="theaters-table-header">
                 <div class="id-container">Cod</div>
@@ -44,7 +52,7 @@
                     <div @click="showChooseModal(theater._id)" id="actions-op">
                       <font-awesome-icon icon="fa-solid fa-trash" />
                     </div>
-                    <div @click="editUser(theater._id, theater)" id="actions-op">
+                    <div @click="editTheater(theater._id, theater)" id="actions-op">
                       <font-awesome-icon icon="fa-solid fa-pen-to-square" />
                     </div>
                   </div> 
@@ -82,74 +90,49 @@ import BaseInput from '../components/Inputs/BaseInput.vue'
 import Pagination from '../components/Pagination.vue'
 import FormTheater from '../components/FormTheater.vue'
 import { http } from '../services/http'
+import FormUpdateTheater from '../components/FormUpdateTheater.vue'
 
 export default {
 name: 'Maps',
-components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination },
+components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination, FormUpdateTheater },
   data () {
     return {
+      theaterToUpdate: {
+        theaterId: null,
+        location: {
+          address: {
+            street1: '',
+            city: '',
+            state: '',
+            zipcode: '',
+          },
+          geo: {
+            type: 'Point',
+            coordinates: [],
+          }
+        },
+        name: '',
+      },
       theaters: [],
       skip: 1,
       total: 0, 
       limit: 20,
       hiddenFormTheater: false,
+      hiddenFormUpdate: false, 
       storeJwt: localStorage.getItem('token'),
       buttonActionBarName: 'Adicionando nova sala de cinema',
       message: 'Desja realmente excluir a sala',
       hiddenTheaterModal: false,
       id: 0,
-      center: {
-        lat: 40.748817,
-        lng: -73.985428
-      },
-      options: {
-        styles: [{
-          'featureType': 'water',
-          'stylers': [{'saturation': 43}, {'lightness': -11}, {'hue': '#0088ff'}]
-        }, {
-          'featureType': 'road',
-          'elementType': 'geometry.fill',
-          'stylers': [{'hue': '#ff0000'}, {'saturation': -100}, {'lightness': 99}]
-        }, {
-          'featureType': 'road',
-          'elementType': 'geometry.stroke',
-          'stylers': [{'color': '#808080'}, {'lightness': 54}]
-        }, {
-          'featureType': 'landscape.man_made',
-          'elementType': 'geometry.fill',
-          'stylers': [{'color': '#ece2d9'}]
-        }, {
-          'featureType': 'poi.park',
-          'elementType': 'geometry.fill',
-          'stylers': [{'color': '#ccdca1'}]
-        }, {
-          'featureType': 'road',
-          'elementType': 'labels.text.fill',
-          'stylers': [{'color': '#767676'}]
-        }, {
-          'featureType': 'road',
-          'elementType': 'labels.text.stroke',
-          'stylers': [{'color': '#ffffff'}]
-        }, {'featureType': 'poi', 'stylers': [{'visibility': 'off'}]}, {
-          'featureType': 'landscape.natural',
-          'elementType': 'geometry.fill',
-          'stylers': [{'visibility': 'on'}, {'color': '#b8cb93'}]
-        }, {'featureType': 'poi.park', 'stylers': [{'visibility': 'on'}]}, {
-          'featureType': 'poi.sports_complex',
-          'stylers': [{'visibility': 'on'}]
-        }, {'featureType': 'poi.medical', 'stylers': [{'visibility': 'on'}]}, {
-          'featureType': 'poi.business',
-          'stylers': [{'visibility': 'simplified'}]
-        }]
-      }
+      update_id: 0,
     }
   },
   methods: {
     //list all cines
-    listAllTheaters() {
+    async listAllTheaters() {
       const url = `/theaters/paginate?limit=${this.limit}&skip=${this.skip}`
 
-      http.get(url).then(res => {
+      await http.get(url).then(res => {
         this.theaters = res.data.result
         this.total = res.data.count
       })
@@ -162,8 +145,8 @@ components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination 
     },
 
 
-    createTheater(theater) {
-      ServiceTheaters.createTheater({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, theater)
+    async createTheater(theater) {
+      await ServiceTheaters.createTheater({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, theater)
         .then(res => {
           if (res.status === 201) {
             this.listAllTheaters()
@@ -173,15 +156,56 @@ components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination 
         this.hiddenFormTheater = false
     },
 
+    //findByCode
+    async searchTheater(theaterId) {
+      await ServiceTheaters.findTheater({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, theaterId)
+        .then(res => {
+          return this.theaters = res.data
+        })
+    },
+
+    //update theater
+    async updateTheater(theater) {
+      const id = this.update_id
+      const parseTheater = JSON.parse(JSON.stringify(theater))
+    
+      await ServiceTheaters.updateTheater(id, parseTheater)
+       .then(res => {
+        if (res.status === 200) {
+          this.listAllTheaters()
+        }
+       })
+       this.hiddenFormUpdate = false
+    },
+
     //delete cine
-    deleteTheater(id) {
-      ServiceTheaters.removeTheater({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, id)
+    async deleteTheater(id) {
+      await ServiceTheaters.removeTheater({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, id)
         .then(res => {
           if (res.status === 200) {
             this.listAllTheaters()
           }
         })
         this.hiddenTheaterModal = false
+    },
+
+    editTheater(id, theater) {
+      this.hiddenFormUpdate = !this.hiddenFormUpdate
+      this.theaterToUpdate.theaterId = theater.theaterId
+      this.theaterToUpdate.name = theater.name
+      this.theaterToUpdate.location.address.street1 = theater.location.address.street1
+      this.theaterToUpdate.location.address.city = theater.location.address.city
+      this.theaterToUpdate.location.address.state = theater.location.address.state
+      this.theaterToUpdate.location.address.zipcode = theater.location.address.zipcode
+
+      this.update_id = id
+    },
+
+    reloadList(data) {
+      this.listAllTheaters()
+      const dataSetInput = data.receiveData = ''
+
+      return dataSetInput
     },
 
     showChooseModal(id) {
@@ -196,6 +220,10 @@ components: { Card, ActionsBar, ChoosePopup, BaseInput, FormTheater, Pagination 
 
     closeFormTheater() {
       this.hiddenFormTheater = false
+    },
+
+    closeModalUpdateTheater() {
+      this.hiddenFormUpdate = false
     },
 
     hiddenChoosePopup() {
