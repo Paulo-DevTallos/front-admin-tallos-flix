@@ -145,10 +145,6 @@ export default {
         this.comments = res.data.result 
         this.total = res.data.count
       })
-      /*ServiceComments.getComments({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
-        const parseComments = JSON.parse(JSON.stringify(res.data))
-        return this.comments = parseComments
-      })*/
     },
 
     changePage(value) {
@@ -292,6 +288,22 @@ export default {
   box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.030);
   padding: 30px;
   z-index: 1004;
+  animation: blow .5s ease-in-out;
+}
+@keyframes blow {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.0) translate(-50%, -50%);
+  }
+  70% {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.2) translate(-50%, -50%);
+  }
+  100% {
+    transform: scale(1.1) translate(-50%, -50%);
+  }
 }
 
 .btn.container {
