@@ -75,7 +75,7 @@
                     :radius="2"
                     color="red"
                   >
-                    <l-tooltip>{{ theater.location.address.city }}</l-tooltip>
+                    <l-tooltip>{{ theater.location }}</l-tooltip>
                   </l-circle-marker>
                 </div>
               </l-map>
@@ -136,6 +136,7 @@ export default {
       totalMovies: 0,
       totalComments: 0,
       totalTheaters: 0,
+      theaters: [],
     }
   },
 
@@ -144,8 +145,9 @@ export default {
       this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
     },
 
-    renderTheaters() {
-      this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
+    async renderTheaters() {
+      await this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
+      console.log(this.theaters)
     },
 
     async listAllMovies() {
@@ -183,7 +185,7 @@ export default {
     this.listAllComments()
     this.listAllMovies()
     this.listAllTheaters()
-    this.handleTheater()
+    this.renderTheaters()
   }
 }
 </script>

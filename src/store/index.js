@@ -63,9 +63,11 @@ export default new vuex.Store({
       })
     },
 
+    //get de theaters
     async handleTheatersRequest(context, token) {
-      await ServiceTheater.getAllTheaters({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllTheaters', res.data.theaters)
+      await ServiceTheater.getTheaters({ headers: { Authorization: token }}).then(res => {
+        const parseTheaters = JSON.parse(JSON.stringify(res.data.theaters))
+        context.commit('getAllTheaters', parseTheaters)
       })
     }
   }
