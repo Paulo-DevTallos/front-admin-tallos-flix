@@ -284,7 +284,7 @@ export default {
   name: 'FormUpdateMovie',
   emits: ['updateMovie', 'closeFormUpdateMovie'],
   props: {
-    movieData: { type: Object,}
+    movieData: Object
   },
   data() {
     return {
@@ -353,19 +353,19 @@ export default {
         this.movie.awards.wins = movieData.awards.wins
         this.movie.awards.nominations = movieData.awards.nominations
         this.movie.awards.text = movieData.awards.text
-        this.movie.lastUpdated = movieData.lastUpdated
+        this.movie.lastupdated = movieData.lastupdated
         this.movie.year = movieData.year
         this.movie.imdb.rating = movieData.imdb.rating
         this.movie.imdb.votes = movieData.imdb.votes
         this.movie.imdb.id = movieData.imdb.id
         this.movie.countries = movieData.countries
-        this.movie.type = this.movieData.type
+        this.movie.type = movieData.type
         this.movie.tomatoes.viewer.rating = movieData.tomatoes.viewer.rating
-        this.movie.tomatoes.viewer.numReviewes = movieData.tomatoes.viewer.numReviewes
+        this.movie.tomatoes.viewer.numReviewes = movieData.tomatoes.viewer.numReviews
         this.movie.tomatoes.viewer.meter = movieData.tomatoes.viewer.meter
         this.movie.tomatoes.dvd = movieData.tomatoes.dvd
         this.movie.tomatoes.critics.rating = movieData.tomatoes.critics.rating
-        this.movie.tomatoes.critics.numReviewes = movieData.tomatoes.critics.numReviewes
+        this.movie.tomatoes.critics.numReviewes = movieData.tomatoes.critics.numReviews
         this.movie.tomatoes.critics.meter = movieData.tomatoes.critics.meter
         this.movie.tomatoes.rotten = movieData.tomatoes.rotten
         this.movie.tomatoes.lastUpdated = movieData.tomatoes.lastUpdated
@@ -424,10 +424,6 @@ export default {
       this.movie.countries.value = ''
     },
   },
-
-  mounted() {
-    console.log(this.movieData)
-  }
 }  
 </script>
 

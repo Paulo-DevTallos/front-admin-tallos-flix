@@ -105,7 +105,6 @@ export default {
   watch: {
     theaterData: {
       handler(theaterData) {
-        console.log(theaterData)
         this.theater.theaterId = theaterData.theaterId
         this.theater.name = theaterData.name
         this.theater.location.address.street1 = theaterData.location.address.street1
