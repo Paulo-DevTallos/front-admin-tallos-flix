@@ -39,8 +39,8 @@
               <p class="card-category">Comentários dos filmes</p>
               <h4 
                 class="card-title"
-                v-for="comment in this.total" :key="comment._id"
-              >{{ comment.name }}</h4>
+                v-for="comment in comments" :key="comment._id"
+              >{{ comment }}</h4>
             </div>
           </stats-card>
         </div>
@@ -167,6 +167,7 @@ export default {
       skip: 0,
       total: 0,
       limit: 20,
+      comments: [],
     }
   },
 
@@ -176,14 +177,14 @@ export default {
     },
 
     async renderCommentsCount() {
-      const url = `/users/paginate?limit=${this.limit}&skip=${this.skip}`
+      const url = `/comments/paginate?limit=${this.limit}&skip=${this.skip}`
 
-      await http.get(url).then(res => {
-        this.users = res.data.result
+      await http.get({ headers: { Authorization: `Bearer ${this.storeToken}`}}, url).then(res => {
+        this.comments = res.data.count 
         this.total = res.data.count
+
+        console.log(this.total, this.comments)
       })
-      
-      //this.$store.dispatch('handleCommentsRequest', `Bearer ${this.storeJwt}`)
     },
 
     /*renderMovies() {

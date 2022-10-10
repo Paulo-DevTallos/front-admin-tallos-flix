@@ -126,7 +126,7 @@ export default {
 
     //create request
     async handleSubmitNewUser(user) {
-      await Service.create(user).then(res => {
+      await Service.create({ headers: { Authorization: `Bearer ${this.storeToken}`}}, user).then(res => {
         if (res.status === 201) {
           //this.renderPaginateUsers()
           this.listUsers()
