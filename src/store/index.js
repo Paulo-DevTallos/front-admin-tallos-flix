@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import vuex from 'vuex'
 import Service from '../services/axios-users.requests'
+import ServiceTheater from '../services/axios-theaters.request'
 
 Vue.use(vuex)
 
@@ -10,7 +11,7 @@ export default new vuex.Store({
       email: '',
       password: '',
     },
-    token: '',
+    token: localStorage.getItem('token'),
     countUsers: 'loading',
     users: [],
     countMovies: 'loading',
@@ -30,6 +31,11 @@ export default new vuex.Store({
     getAllUsersCount(state, payload) {
       state.countUsers = payload
     },
+
+    getAllTheaters(state, payload) {
+      state.theaters = payload
+      state.token = payload.access_token
+    }
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -56,5 +62,11 @@ export default new vuex.Store({
         context.commit('getAllUsersCount', res.data.countUsers)
       })
     },
+
+    async handleTheatersRequest(context, token) {
+      await ServiceTheater.getAllTheaters({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllTheaters', res.data.theaters)
+      })
+    }
   }
 })
