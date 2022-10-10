@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import vuex from 'vuex'
 import Service from '../services/axios-users.requests'
-import ServiceMovies from '../services/axios-movies.request'
-import ServiveComments from '../services/axios-comments.request'
-import ServiceTheaters from '../services/axios-theaters.request'
 
 Vue.use(vuex)
 
@@ -14,8 +11,9 @@ export default new vuex.Store({
       password: '',
     },
     token: '',
-    users: [],
     countUsers: 'loading',
+    users: [],
+    countMovies: 'loading',
     movies: [],
     countComments: 'loading',
     comments: [],
@@ -32,23 +30,6 @@ export default new vuex.Store({
     getAllUsersCount(state, payload) {
       state.countUsers = payload
     },
-
-    getAllComments(state, payload) {
-      state.countComments = payload
-    },
-    
-    getAllMovies(state, payload) {
-      state.movies = payload
-      state.token = localStorage.getItem('token')
-    },
-
-    getAllTheatersCount(state, payload) {
-      state.countTheaters = payload
-    },
-
-    getAllTheaters(state, payload) {
-      state.theaters = payload
-    }
   },
   actions: {
     handleSubmitLogin(context, payload) {
@@ -75,32 +56,5 @@ export default new vuex.Store({
         context.commit('getAllUsersCount', res.data.countUsers)
       })
     },
-
-    //get de comments
-    async handleCommentsRequest(context, token) {
-      await ServiveComments.getComments({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllComments', res.data.countComments)
-      })
-    },
-
-    //get de movies
-    /*async handleMoviesRequest(context, token) {
-      await ServiceMovies.getMovies({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllMovies', JSON.parse(JSON.stringify(res.data)))
-      })
-    },*/
-
-    //get de theaters
-    async handleTheatersRequest(context, token) {
-      await ServiceTheaters.getTheaters({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllTheatersCount', res.data.countTheaters)
-      }) 
-    },
-
-    async handleTheaters(context, token) {
-      await ServiceTheaters.getTheaters({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllTheaters', res.data.theaters)
-      })
-    }
   }
 })
