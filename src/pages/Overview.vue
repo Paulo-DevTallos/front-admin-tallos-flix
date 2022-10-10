@@ -24,7 +24,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Filmes disponíveis</p>
-              <!--<h4 class="card-title">{{ $store.state.movies.length }}</h4>-->
+              <h4 class="card-title">{{ this.totalMovies }}</h4>
             </div>
           </stats-card>
         </div>
@@ -37,10 +37,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Comentários dos filmes</p>
-              <h4 
-                class="card-title"
-                v-for="comment in comments" :key="comment._id"
-              >{{ comment }}</h4>
+              <h4 class="card-title">{{ this.totalComments }}</h4>
             </div>
           </stats-card>
         </div>
@@ -53,7 +50,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Cinemas catalogados</p>
-              <h4 class="card-title">{{ this.$store.state.countTheaters }}</h4>
+              <h4 class="card-title">{{ this.totalTheaters }}</h4>
             </div>
           </stats-card>
         </div>
@@ -138,36 +135,11 @@ export default {
           seriesCount: undefined
         }
       },
-      lineChart: {
-        data: {
-          labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
-          series: [
-            [287, 385, 490, 492, 554, 586, 698, 695],
-            [67, 152, 143, 240, 287, 335, 435, 437],
-            [23, 113, 67, 108, 190, 239, 307, 308]
-          ]
-        },
-        options: {
-          low: 0,
-          high: 800,
-          showArea: false,
-          height: '245px',
-          axisX: {
-            showGrid: false
-          },
-          lineSmooth: true,
-          showLine: true,
-          showPoint: true,
-          fullWidth: true,
-          chartPadding: {
-            right: 50
-          }
-        },
-      },
       skip: 0,
-      total: 0,
       limit: 20,
-      comments: [],
+      totalMovies: 0,
+      totalComments: 0,
+      totalTheaters: 0,
     }
   },
 
@@ -176,36 +148,49 @@ export default {
       this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
     },
 
-    async renderCommentsCount() {
-      const url = `/comments/paginate?limit=${this.limit}&skip=${this.skip}`
-
-      await http.get({ headers: { Authorization: `Bearer ${this.storeToken}`}}, url).then(res => {
-        this.comments = res.data.count 
-        this.total = res.data.count
-
-        console.log(this.total, this.comments)
-      })
-    },
-
-    /*renderMovies() {
-      this.$store.dispatch('handleMoviesRequest', `Bearer ${this.storeJwt}`)
-    },*/
-
-    renderTheaters() {
-      this.$store.dispatch('handleTheaters', `Bearer ${this.storeJwt}`)
+    renderMoviesCount() {
+      this.$store.dispatch('handleMoviesCount', `Bearer ${this.storeJwt}`)
     },
 
     renderTheatersCount() {
       this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
-    }
+    },
+
+    async listAllMovies() {
+      const url = `/movies/paginate?limit=${this.limit}&skip=${this.skip}`
+      await http.get(url).then(res => {
+        this.totalMovies = res.data.count
+      })
+    },
+
+    //list comments
+    async listAllComments() {
+      const url = `/comments/paginate?limit=${this.limit}&skip=${this.skip}`
+      await http.get(url).then(res => {
+        this.totalComments = res.data.count
+      })
+    },
+
+    //list theaters
+    async listAllTheaters() {
+      const url = `/theaters/paginate?limit=${this.limit}&skip=${this.skip}`
+
+      await http.get(url).then(res => {
+        this.theaters = res.data.result
+        this.totalTheaters = res.data.count
+      })
+    },
+
+    renderTheaters() {
+      this.$store.dispatch('handleTheaters', `Bearer ${this.storeJwt}`)
+    },
   },
 
   mounted() {
     this.renderUsersCount()
-    this.renderCommentsCount()
-    //this.renderMovies()*/
-    this.renderTheatersCount()
-    this.renderTheaters()
+    this.listAllComments()
+    this.listAllMovies()
+    this.listAllTheaters()
 
 
     /*for (let index = 0; index < this.$store.state.movies.length; index++) {
