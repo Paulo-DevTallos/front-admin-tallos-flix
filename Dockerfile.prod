@@ -1,0 +1,21 @@
+FROM node:lts as builder
+
+# USER root
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN yarn install
+
+COPY . .
+
+RUN yarn build
+
+FROM nginx:stable-alpine as production-stage
+
+COPY --from=builder /usr/vue-light-bootstrap-dashboard-master/app/dist /usr/share/nginx/html
+
+EXPOSE 3006
+
+CMD ["nginx", "-g", "daemon off;"]
