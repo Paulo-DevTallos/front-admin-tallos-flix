@@ -65,7 +65,10 @@
             </template>
             <template>
               <l-map style="height: 360px" :zoom="zoom" :center="center">
-                <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+                <l-tile-layer 
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
+                  :attribution="attribution"
+                ></l-tile-layer>
                 <div v-for="theater in this.$store.state.theaters" :key="theater._id">
                   <l-circle-marker
                     :lat-lng="theater.location.geo.coordinates"
@@ -103,19 +106,12 @@
 <script>
 import ChartCard from 'src/components/Cards/ChartCard.vue'
 import StatsCard from 'src/components/Cards/StatsCard.vue'
-import LTable from 'src/components/Table.vue'
-import {LMap, LTileLayer, LToolTip, LCircleMarker} from 'vue2-leaflet'
 import { http } from '../services/http'
 
 export default {
   components: {
-    LMap,
-    LTileLayer,
-    LTable,
     ChartCard,
     StatsCard,
-    LToolTip,
-    LCircleMarker
   },
   data () {
     return {
@@ -148,11 +144,7 @@ export default {
       this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
     },
 
-    renderMoviesCount() {
-      this.$store.dispatch('handleMoviesCount', `Bearer ${this.storeJwt}`)
-    },
-
-    renderTheatersCount() {
+    renderTheaters() {
       this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
     },
 
@@ -182,7 +174,7 @@ export default {
     },
 
     renderTheaters() {
-      this.$store.dispatch('handleTheaters', `Bearer ${this.storeJwt}`)
+      this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
     },
   },
 
@@ -191,18 +183,7 @@ export default {
     this.listAllComments()
     this.listAllMovies()
     this.listAllTheaters()
-
-
-    /*for (let index = 0; index < this.$store.state.movies.length; index++) {
-      if(this.$store.state.movies[index].type === "movie"){
-        //this.moviesCount++
-        console.log(this.$store.state.movies[index].type)
-      }
-      else if(this.$store.state.movies[index].type === "series"){
-        //this.seriesCount++
-        console.log(this.seriesCount, 'teste')
-      }
-    }*/
+    this.handleTheater()
   }
 }
 </script>
