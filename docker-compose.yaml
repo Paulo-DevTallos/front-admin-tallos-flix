@@ -9,7 +9,7 @@ services:
       - 3006:8080
     restart: always
     volumes: 
-      - .:/app
+      - .:/usr/vue-light-bootstrap-dashboard-master/app
     tty: true
     networks:
       - api-tallos-flix

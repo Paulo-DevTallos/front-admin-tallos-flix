@@ -1,9 +1,11 @@
 FROM node:lts
 
-WORKDIR /app
+WORKDIR /usr/vue-light-bootstrap-dashboard-master/app
 
 COPY . .
 
-RUN npm install
+RUN yarn add -D sass
+
+RUN yarn install
 
 EXPOSE 3006
