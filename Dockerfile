@@ -1,10 +1,8 @@
-FROM node:lts
+FROM node:16-alpine
 
 WORKDIR /usr/vue-light-bootstrap-dashboard-master/app
 
 COPY . .
-
-RUN yarn add -D sass
 
 RUN yarn install
 

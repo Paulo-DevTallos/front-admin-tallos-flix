@@ -13,7 +13,7 @@ services:
     tty: true
     networks:
       - api-tallos-flix
-
+    
 networks:
   api-tallos-flix:
     driver: bridge
