@@ -37,7 +37,7 @@
                         v-if="hiddenOptionModal && id === movie._id"
                         @closeModal="closeOptions"
                         @deleteMovie="deleteMovie(movie._id)"
-                        @updateMovie="openFormUpdateMovie(movie._id)"
+                        @updateMovie="openFormUpdateMovie(movie._id, movie)"
                       />
                       <form-update-movie
                         v-if="hiddenFormUpdateMovie"
@@ -220,10 +220,10 @@ export default {
   },
   methods: {
     //get movies
-    listAllMovies() {
+    async listAllMovies() {
       const url = `/movies/paginate?limit=${this.limit}&skip=${this.skip}`
       console.log(url)
-      http.get(url).then(res => {
+      await http.get(url).then(res => {
         this.movies = res.data.result
         this.total = res.data.count
       })
@@ -234,15 +234,14 @@ export default {
     },
 
     changePage(value) {
-      console.log(value)
       this.skip = value
       this.listAllMovies()
     },
 
     //create movie
-    createMovie(movie) {
+    async createMovie(movie) {
       console.log(movie)
-      ServiceMovies.createMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, movie)
+      await ServiceMovies.createMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, movie)
         .then(res => {
           if (res.status === 201) {
             this.listAllMovies()
@@ -260,12 +259,12 @@ export default {
     },
 
     //update movie
-    updateMovieData(movie) {
+    async updateMovieData(movie) {
       const id = this.id
       console.log(id)
       const parseMovie = JSON.parse(JSON.stringify(movie))
 
-      ServiceMovies.updateMovie({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, id, parseMovie)
+      await ServiceMovies.updateMovie({ headers: { Authorization: `Bearer ${this.storeJwt}`}}, id, parseMovie)
         .then(res => {
           console.log(res.data)
           if (res.status === 200) {
@@ -276,8 +275,8 @@ export default {
     },
 
     //delete movie
-    deleteMovie(id) {
-      ServiceMovies.removeMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, id)
+    async deleteMovie(id) {
+      await ServiceMovies.removeMovie({ headers: { Authorization: `Bearer ${this.storeJwt}` }}, id)
       .then(res => {
         if (res.status === 200) {
           this.listAllMovies()
@@ -315,10 +314,46 @@ export default {
       this.hiddenFormNewMovie = !this.hiddenFormNewMovie
     },
 
-    openFormUpdateMovie(id) {
+    openFormUpdateMovie(id, movie) {
       this.hiddenOptionModal = false
       this.hiddenFormUpdateMovie = !this.hiddenFormUpdateMovie
-      console.log(id)  
+      console.log(movie.plot)
+
+      this.movieToUpdate.plot = movie.plot
+      this.movieToUpdate.genres = movie.genres
+      this.movieToUpdate.runtime = movie.runtime
+      this.movieToUpdate.cast = movie
+      this.movieData.num_mflix_comments = movie.num_mflix_comments
+      this.movieToUpdate.poster = movie.poster
+      this.movieToUpdate.title = movie.title
+      this.movieToUpdate.fullplot = movie.fullplot
+      this.movieToUpdate.languages = movie.languages
+      this.movieToUpdate.released = movie.released
+      this.movieToUpdate.directors = movie.directors
+      this.movieToUpdate.writers = movie.writers
+      this.movieToUpdate.awards.wins = movie.awards.wins
+      this.movieToUpdate.awards.nominations = movie.awards.nominations
+      this.movieToUpdate.awards.text = movie.awards.text
+      this.movieToUpdate.lastupdated = movie.lastupdated
+      this.movieToUpdate.year = movie.year
+      this.movieToUpdate.imdb.rating = movie.imdb.rating
+      this.movieToUpdate.imdb.votes = movie.imdb.votes
+      this.movieToUpdate.imdb.id = movie.imdb.id
+      this.movieToUpdate.countries = movie.countries
+      this.movieToUpdate.type = movie.type
+      this.movieToUpdate.tomatoes.viewer.rating = movie.tomatoes.viewer.rating
+      this.movieToUpdate.tomatoes.viewer.numReviews = movie.tomatoes.viewer.numReviews
+      this.movieToUpdate.tomatoes.viewer.meter = movie.tomatoes.viewer.meter
+      this.movieToUpdate.tomatoes.dvd = movie.tomatoes.dvd
+      this.movieToUpdate.tomatoes.critics.rating = movie.tomatoes.critics.rating
+      this.movieToUpdate.tomatoes.critics.numReviews = movie.tomatoes.critics.numReviews
+      this.movieToUpdate.tomatoes.critics.meter = movie.tomatoes.critics.meter
+      this.movieToUpdate.tomatoes.rotten = movie.tomatoes.rotten
+      this.movieToUpdate.tomatoes.lastUpdated = movie.tomatoes.lastUpdated
+      this.movieToUpdate.tomatoes.fresh = movie.tomatoes.fresh
+      
+      this.id = id
+      console.log(id)
     },
     
     closeFormNewMovieModal() {

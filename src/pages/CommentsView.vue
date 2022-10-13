@@ -23,8 +23,11 @@
             <div class="table-content">
               <div id="comments-table-row">
                 <div class="comments-table-row" v-for="comment in comments" :key="comment._id">
-                  <div class="content card form-comment-content" v-if="hiddenCommentForm"> 
-                    <div class="content container-fluid">
+                  <div class="card form-comment-content" v-if="hiddenCommentForm"> 
+                    <div class="container-fluid">
+                      <div class="close-icon" @click="closeFormComment">
+                        <font-awesome-icon icon="fa-solid fa-xmark" />
+                      </div>
                       <div class="icon-comment">
                         <font-awesome-icon icon="fa-solid fa-plus" />
                         <font-awesome-icon icon="fa-solid fa-comment" />
@@ -76,12 +79,14 @@
                 </div>
               </div>
             </div>
-            <div class="card-footer alignment-footer pb-0 pt-3">
-              <jw-pagination 
-                :pageSize="10" 
-                :items="this.$store.state.comments" 
-                @changePage="onChangePage"
-              ></jw-pagination>
+            <div class="align-p pb-0 pt-3">
+              <pagination
+                v-if="comments.length"
+                :skip="skip"
+                :total="total"
+                :limit="limit"
+                @change-page="changePage"
+              ></pagination>
             </div>
           </card>
         </div>
@@ -94,17 +99,22 @@
 import ActionsBar from '../components/ActionsBar.vue'
 import Card from '../components/Cards/Card.vue'
 import BaseInput from '../components/Inputs/BaseInput.vue'
+import Pagination from '../components/Pagination.vue'
 import ChoosePopup from '../components/Popups/ChoosePopup.vue'
 import ServiceComments from '../services/axios-comments.request'
 import ServiceMovies from '../services/axios-movies.request'
+import { http } from '../services/http'
 
 export default {
   name: 'CommentsView',
-  components: { Card, ActionsBar, BaseInput, ChoosePopup }, 
+  components: { Card, ActionsBar, BaseInput, ChoosePopup, Pagination }, 
   data() {
     return {
       comments: [],
       movies: [],
+      skip: 1,
+      total: 0,
+      limit: 20,
       hiddenCommentForm: false,
       hiddenChoosePopup: false,
       message: 'Deseja excluir o comentário de',
@@ -127,17 +137,20 @@ export default {
        .then(res => this.movies = res.data)
     },
 
-    onChangePage(comment) {
-      // update page of items
-      console.log(comment)
-      this.comments = comment
+    listComments() {
+      const url = `/comments/paginate?limit=${this.limit}&skip=${this.skip}`
+      console.log(url)
+      http.get(url).then(res => {
+        console.log(res.data)
+        this.comments = res.data.result 
+        this.total = res.data.count
+      })
     },
 
-    listComments() {
-      ServiceComments.getComments({ headers: { Authorization: `Bearer ${this.storeJwt}` }}).then(res => {
-        const parseComments = JSON.parse(JSON.stringify(res.data))
-        return this.comments = parseComments
-      })
+    changePage(value) {
+      console.log(value)
+      this.skip = value
+      this.listComments()
     },
 
     sendComment(commentData) {
@@ -184,6 +197,10 @@ export default {
 
     callCommentForm() {
       this.hiddenCommentForm = !this.hiddenCommentForm
+    },
+
+    closeFormComment() {
+      this.hiddenCommentForm = false
     },
 
     closePopupModal() {
@@ -268,9 +285,25 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.100);
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.030);
   padding: 30px;
   z-index: 1004;
+  animation: blow .5s ease-in-out;
+}
+@keyframes blow {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.0) translate(-50%, -50%);
+  }
+  70% {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.2) translate(-50%, -50%);
+  }
+  100% {
+    transform: scale(1.1) translate(-50%, -50%);
+  }
 }
 
 .btn.container {
@@ -313,7 +346,25 @@ textarea {
   height: 100px;
 }
 
+.close-icon {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+}
+
+.close-icon svg {
+  font-size: 25px;
+  color: #002966;
+  cursor: pointer;
+}
+
 .alignment-footer {
   text-align: center;
+}
+
+.align-p {
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: auto;
 }
 </style>

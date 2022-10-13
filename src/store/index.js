@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import vuex from 'vuex'
 import Service from '../services/axios-users.requests'
-import ServiceMovies from '../services/axios-movies.request'
-import ServiveComments from '../services/axios-comments.request'
-import ServiceTheaters from '../services/axios-theaters.request'
+import ServiceTheater from '../services/axios-theaters.request'
 
 Vue.use(vuex)
 
@@ -13,11 +11,16 @@ export default new vuex.Store({
       email: '',
       password: '',
     },
-    token: '',
+    token: localStorage.getItem('token'),
+    countUsers: 'loading',
     users: [],
+    countMovies: 'loading',
     movies: [],
+    countComments: 'loading',
     comments: [],
+    countTheaters: 'loading',
     theaters: [],
+
   },
   mutations: {
     authLogin(state, payload) {
@@ -25,24 +28,13 @@ export default new vuex.Store({
       state.token = payload.access_token
     },
     
-    getAllUsers(state, payload) {
-      state.users = payload
-      state.token = localStorage.getItem('token')
-    },
-
-    getAllComments(state, payload) {
-      state.comments = payload
-      state.token = localStorage.getItem('token')
-    },
-    
-    getAllMovies(state, payload) {
-      state.movies = payload
-      state.token = localStorage.getItem('token')
+    getAllUsersCount(state, payload) {
+      state.countUsers = payload
     },
 
     getAllTheaters(state, payload) {
       state.theaters = payload
-      state.token = localStorage.getItem('token')
+      state.token = payload.access_token
     }
   },
   actions: {
@@ -65,30 +57,17 @@ export default new vuex.Store({
     },
 
     //get de usuarios
-    handleUsersRequest(context, token) {
-      Service.listar({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllUsers', JSON.parse(JSON.stringify(res.data)))
-      })
-    },
-
-    //get de comments
-    handleCommentsRequest(context, token) {
-      ServiveComments.getComments({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllComments', JSON.parse(JSON.stringify(res.data)))
-      })
-    },
-
-    //get de movies
-    handleMoviesRequest(context, token) {
-      ServiceMovies.getMovies({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllMovies', JSON.parse(JSON.stringify(res.data)))
+    async handleUsersRequest(context, token) {
+      await Service.listar({ headers: { Authorization: token }}).then(res => {
+        context.commit('getAllUsersCount', res.data.countUsers)
       })
     },
 
     //get de theaters
-    handleTheatersRequest(context, token) {
-      ServiceTheaters.getTheaters({ headers: { Authorization: token }}).then(res => {
-        context.commit('getAllTheaters', JSON.parse(JSON.stringify(res.data)))
+    async handleTheatersRequest(context, token) {
+      await ServiceTheater.getTheaters({ headers: { Authorization: token }}).then(res => {
+        const parseTheaters = JSON.parse(JSON.stringify(res.data.theaters))
+        context.commit('getAllTheaters', parseTheaters)
       })
     }
   }

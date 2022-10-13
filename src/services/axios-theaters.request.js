@@ -1,8 +1,20 @@
 import { http } from './http'
 
 export default {
-  getTheaters: (token) => {
-    return http.get('/theaters', token)
+  getTheaters: () => {
+    return http.get('/theaters')
+  },
+
+  getPaginatedTheaters: (limit, skip) => {
+    return http.get(`/theaters/paginate?limit=${limit}&skip=${skip}`) 
+  },
+
+  findTheater(token, cod) {
+    return http.get(`/theaters/search/${cod}`, token)
+  },
+
+  updateTheater(id, data) {
+    return http.patch(`/theaters/${id}`, data)
   },
  
   createTheater: (token, data) => {

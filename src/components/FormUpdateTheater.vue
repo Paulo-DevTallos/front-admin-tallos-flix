@@ -1,10 +1,10 @@
 <template>
- <div class="card form-theater-content container-fluid">
+  <div class="card form-theater-content container-fluid">
     <div class="icon-theater">
       <font-awesome-icon icon="fa-solid fa-plus" />
       <font-awesome-icon icon="fa-solid fa-film" />
     </div>
-    <form @submit.prevent="$emit('createNewTheater', theater)">
+    <form @submit.prevent="$emit('theaterUpdate', theater)" :theaterData="theater"> 
       <label for="id-theater">Id do cienema</label>
       <base-input 
         id="id-theater"
@@ -69,30 +69,50 @@
     </form>
   </div>
 </template>
-
+ 
 <script>
+import BaseInput from './Inputs/BaseInput.vue'
+
 export default {
-  name: 'FormTheater',
-  emits: ['createNewTheater', 'closeFormTheater'],
+  name: 'FormUpdateTheater',
+  components: { BaseInput },
+  emits: ['theaterUpdate', 'closeFormTheater'],
+  props: {
+    theaterData: Object,
+  },
   data() {
     return {
       theater: {
-        theaterId: 0,
+        theaterId: this.theaterData.theaterId,
         location: {
           address: {
-            street1: '',
-            city: '',
-            state: '',
-            zipcode: '',
+            street1: this.theaterData.location.address.street1,
+            city: this.theaterData.location.address.city,
+            state: this.theaterData.location.address.state,
+            zipcode: this.theaterData.location.address.zipcode,
           },
           geo: {
             type: 'Point',
             coordinates: [],
           }
         },
-        name: '',
+        name: this.theaterData.name,
       },
-      message_arr: 'Clique aqui para adicionar coordenadas à lista',
+      message_arr: 'Clique aqui para alterar as coordenadas da lista',
+    }
+  },
+
+  watch: {
+    theaterData: {
+      handler(theaterData) {
+        this.theater.theaterId = theaterData.theaterId
+        this.theater.name = theaterData.name
+        this.theater.location.address.street1 = theaterData.location.address.street1
+        this.theater.location.address.city = theaterData.location.address.city
+        this.theater.location.address.state = theaterData.location.address.state
+        this.theater.location.address.zipcode = theaterData.location.address.zipcode
+      },
+      deep: true
     }
   },
 
@@ -107,7 +127,7 @@ export default {
   },
 }  
 </script>
-
+ 
 <style scoped>
 .form-theater-content {
   width: 600px;

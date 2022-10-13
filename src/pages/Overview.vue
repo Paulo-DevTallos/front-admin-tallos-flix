@@ -11,7 +11,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Usuários na plataforma</p>
-              <h4 class="card-title">{{ $store.state.users.length }}</h4>
+              <h4 class="card-title">{{ $store.state.countUsers }}</h4>
             </div>
           </stats-card>
         </div>
@@ -24,7 +24,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Filmes disponíveis</p>
-              <h4 class="card-title">{{ $store.state.movies.length }}</h4>
+              <h4 class="card-title">{{ this.totalMovies }}</h4>
             </div>
           </stats-card>
         </div>
@@ -37,7 +37,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Comentários dos filmes</p>
-              <h4 class="card-title">{{ $store.state.comments.length }}</h4>
+              <h4 class="card-title">{{ this.totalComments }}</h4>
             </div>
           </stats-card>
         </div>
@@ -50,7 +50,7 @@
             </div>
             <div slot="content">
               <p class="card-category">Cinemas catalogados</p>
-              <h4 class="card-title">{{ $store.state.theaters.length }}</h4>
+              <h4 class="card-title">{{ this.totalTheaters }}</h4>
             </div>
           </stats-card>
         </div>
@@ -65,14 +65,17 @@
             </template>
             <template>
               <l-map style="height: 360px" :zoom="zoom" :center="center">
-                <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+                <l-tile-layer 
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
+                  :attribution="attribution"
+                ></l-tile-layer>
                 <div v-for="theater in this.$store.state.theaters" :key="theater._id">
                   <l-circle-marker
                     :lat-lng="theater.location.geo.coordinates"
                     :radius="2"
                     color="red"
                   >
-                    <l-tooltip>{{ theater.location.address.city }}</l-tooltip>
+                    <l-tooltip>{{ theater.location }}</l-tooltip>
                   </l-circle-marker>
                 </div>
               </l-map>
@@ -87,7 +90,7 @@
             </template>
             <template slot="footer">
               <div class="legend">
-                <i class="fa fa-circle text-danger">{{ $store.state.movies.length }}</i>Filmes
+                <!--<i class="fa fa-circle text-danger">{{ $store.state.movies.length }}</i>Filmes-->
                 <i class="fa fa-circle text-danger">Teste</i>Series
                 <!--<i class="fa fa-circle text-danger"></i> Filmes
                 <i class="fa fa-circle text-warning"></i> Series-->
@@ -99,25 +102,19 @@
     </div>
   </div>
 </template>
+
 <script>
 import ChartCard from 'src/components/Cards/ChartCard.vue'
 import StatsCard from 'src/components/Cards/StatsCard.vue'
-import LTable from 'src/components/Table.vue'
-import {LMap, LTileLayer, LToolTip, LCircleMarker} from 'vue2-leaflet'
+import { http } from '../services/http'
 
 export default {
   components: {
-    LMap,
-    LTileLayer,
-    LTable,
     ChartCard,
     StatsCard,
-    LToolTip,
-    LCircleMarker
   },
   data () {
     return {
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       zoom: 15,
@@ -134,69 +131,61 @@ export default {
           seriesCount: undefined
         }
       },
-      lineChart: {
-        data: {
-          labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
-          series: [
-            [287, 385, 490, 492, 554, 586, 698, 695],
-            [67, 152, 143, 240, 287, 335, 435, 437],
-            [23, 113, 67, 108, 190, 239, 307, 308]
-          ]
-        },
-        options: {
-          low: 0,
-          high: 800,
-          showArea: false,
-          height: '245px',
-          axisX: {
-            showGrid: false
-          },
-          lineSmooth: true,
-          showLine: true,
-          showPoint: true,
-          fullWidth: true,
-          chartPadding: {
-            right: 50
-          }
-        },
-      },
+      skip: 0,
+      limit: 20,
+      totalMovies: 0,
+      totalComments: 0,
+      totalTheaters: 0,
+      theaters: [],
     }
   },
 
   methods: {
-    renderUsers() {
+    renderUsersCount() {
       this.$store.dispatch('handleUsersRequest', `Bearer ${this.storeJwt}`)
     },
 
-    renderComments() {
-      this.$store.dispatch('handleCommentsRequest', `Bearer ${this.storeJwt}`)
+    async renderTheaters() {
+      await this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
+      console.log(this.theaters)
     },
 
-    renderMovies() {
-      this.$store.dispatch('handleMoviesRequest', `Bearer ${this.storeJwt}`)
+    async listAllMovies() {
+      const url = `/movies/paginate?limit=${this.limit}&skip=${this.skip}`
+      await http.get(url).then(res => {
+        this.totalMovies = res.data.count
+      })
+    },
+
+    //list comments
+    async listAllComments() {
+      const url = `/comments/paginate?limit=${this.limit}&skip=${this.skip}`
+      await http.get(url).then(res => {
+        this.totalComments = res.data.count
+      })
+    },
+
+    //list theaters
+    async listAllTheaters() {
+      const url = `/theaters/paginate?limit=${this.limit}&skip=${this.skip}`
+
+      await http.get(url).then(res => {
+        this.theaters = res.data.result
+        this.totalTheaters = res.data.count
+      })
     },
 
     renderTheaters() {
       this.$store.dispatch('handleTheatersRequest', `Bearer ${this.storeJwt}`)
-    }
+    },
   },
 
   mounted() {
-    this.renderUsers()
-    this.renderComments()
-    this.renderMovies()
+    this.renderUsersCount()
+    this.listAllComments()
+    this.listAllMovies()
+    this.listAllTheaters()
     this.renderTheaters()
-    
-    for (let index = 0; index < this.$store.state.movies.length; index++) {
-      if(this.$store.state.movies[index].type === "movie"){
-        //this.moviesCount++
-        console.log(this.$store.state.movies[index].type)
-      }
-      else if(this.$store.state.movies[index].type === "series"){
-        //this.seriesCount++
-        console.log(this.seriesCount, 'teste')
-      }
-    }
   }
 }
 </script>
